@@ -1,0 +1,59 @@
+@import '../abstract/_variaveis'
+
+.container
+    max-width: 325px
+    max-height: 600px
+    display: flex
+    flex-direction: column
+    padding: 1rem
+    background-color: $cor-salmao
+    box-shadow: 5px 5px 10px 2px black
+    margin-top: 1em
+    .imagem
+        height: 300px
+        width: 100%
+        display: flex
+        flex-direction: column
+        align-items: center
+        justify-content: space-between
+        margin-bottom: 1.2em 
+        h2
+            font-size: 3em
+            font-family: $fonte-primaria
+            font-weight: 300
+            text-align: center
+        span
+            text-align: center
+        img
+            width: 45%
+    .formulario
+        display: flex
+        flex-direction: column
+        box-shadow: 0 0 3px 2px black
+        font-size: 1.3em
+        font-family: $fonte-primaria
+        padding: 1em
+        background-color: #d67d7d
+        input, select
+            margin-bottom: 1.2em
+            height: 25px
+            padding: 0 .5em
+            font-size: .7em
+        label
+            margin-bottom: .4em
+            line-height: 1
+            text-shadow: 1px 1px 2px black
+        .container-btn
+            display: grid
+            grid-template-columns: 1fr 1fr
+            column-gap: .8em
+            button
+                font-size: 1.4rem
+                font-family: $fonte-secundaria
+                padding: .2em 0
+                cursor: pointer
+                border: solid 2px black
+                &:hover
+                    background-color: $cor-azul-escuro
+                    color: $cor-branca
+                    transition: .4s

@@ -1,0 +1,16 @@
+.lista-produtos
+    display: flex
+    .lista
+        width: 300px
+        height: fit-content
+        .lista-item
+            display: grid
+            grid-template-columns: 15% 1fr 20% 15%
+            border: solid 1px black
+            padding: .2rem .5rem
+            .qtde-produto
+                grid-column: 1/2
+            .nome-produto
+                grid-column: 2/3
+            .btn-excluir-item
+                grid-column: 4/5

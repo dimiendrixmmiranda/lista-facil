@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/styles/style.css">
+    <title>Lista Fácil</title>
+</head>
+<body>
+    <div class="container">
+        <div class="imagem">
+            <h2>Lista Fácil</h2>
+            <span>
+                Anote, Planeje, Simplifique e Calcule para Facilitar seu Dia a Dia nas Compras!
+            </span>
+            <img src="./assets/imgs/carrinho.png" alt="">
+        </div>
+        <form action="" class="formulario" id="form" autocomplete="off">
+            <label for="produto">Digite o nome do produto:</label>
+            <input type="text" id="produto">
+            <label for="quantidade">Digite a quantidade:</label>
+            <input type="text" id="quantidade">
+            <label for="categoria">Selecione a categoria:</label>
+            <select name="selecionar-categoria" id="categoria">
+                <option value="">Selecione</option>
+                <option value="produtos-gerais">Produtos Gerais</option>
+                <option value="frutas">Frutas</option>
+                <option value="verduras">Verduras</option>
+                <option value="bebidas">Bebidas</option>
+                <option value="carnes">Carnes</option>
+                <option value="produtos-limpeza">Produtos de Limpeza</option>
+                <option value="produtos-higiene">Produtos de Higiene Pessoal</option>
+                <option value="produtos-animais">Produtos para Animais</option>
+                <option value="produtos-casa">Produtos para Casa</option>
+            </select>
+            <div class="container-btn">
+                <button type="reset">Cancelar</button>
+                <button type="submit">Salvar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="lista-produtos" id="listaProdutos"></div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
+
+<!-- <ul class="lista" data-categoria="frutas">
+    <h2>Categoria</h2>
+    <li class="lista-item">
+        <span class="quantidade">5</span>
+        <span class="produto">Arroz</span>
+        <div class="preco">preco</div>
+        <span class="btn-excluir-item">X</span>
+    </li>
+</ul> -->

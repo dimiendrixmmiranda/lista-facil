@@ -1,0 +1,110 @@
+@import 'https://fonts.googleapis.com/css2?family=Bakbak+One&family=Bebas+Neue&display=swap';
+@import 'https://fonts.googleapis.com/css2?family=Bakbak+One&family=Bebas+Neue&display=swap';
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: #071b8d;
+  color: #fff;
+}
+
+.container {
+  max-width: 325px;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: #d44949;
+  box-shadow: 5px 5px 10px 2px black;
+  margin-top: 1em;
+}
+.container .imagem {
+  height: 300px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2em;
+}
+.container .imagem h2 {
+  font-size: 3em;
+  font-family: "Bakbak One", sans-serif;
+  font-weight: 300;
+  text-align: center;
+}
+.container .imagem span {
+  text-align: center;
+}
+.container .imagem img {
+  width: 45%;
+}
+.container .formulario {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 3px 2px black;
+  font-size: 1.3em;
+  font-family: "Bakbak One", sans-serif;
+  padding: 1em;
+  background-color: #d67d7d;
+}
+.container .formulario input, .container .formulario select {
+  margin-bottom: 1.2em;
+  height: 25px;
+  padding: 0 0.5em;
+  font-size: 0.7em;
+}
+.container .formulario label {
+  margin-bottom: 0.4em;
+  line-height: 1;
+  text-shadow: 1px 1px 2px black;
+}
+.container .formulario .container-btn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  -moz-column-gap: 0.8em;
+       column-gap: 0.8em;
+}
+.container .formulario .container-btn button {
+  font-size: 1.4rem;
+  font-family: "Bebas Neue", sans-serif;
+  padding: 0.2em 0;
+  cursor: pointer;
+  border: solid 2px black;
+}
+.container .formulario .container-btn button:hover {
+  background-color: #000E21;
+  color: #fff;
+  transition: 0.4s;
+}
+
+.lista-produtos {
+  display: flex;
+}
+.lista-produtos .lista {
+  width: 300px;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+.lista-produtos .lista .lista-item {
+  display: grid;
+  grid-template-columns: 15% 1fr 20% 15%;
+  border: solid 1px black;
+  padding: 0.2rem 0.5rem;
+}
+.lista-produtos .lista .lista-item .qtde-produto {
+  grid-column: 1/2;
+}
+.lista-produtos .lista .lista-item .nome-produto {
+  grid-column: 2/3;
+}
+.lista-produtos .lista .lista-item .btn-excluir-item {
+  grid-column: 4/5;
+}/*# sourceMappingURL=style.css.map */
