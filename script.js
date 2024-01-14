@@ -29,6 +29,8 @@ formulario.addEventListener('submit', (e) => {
         arrayDeElementos.push(elementoAtual)
     }
 
+    // const elementoTemPreco = arrayDeElementos.find(elemento => console.log(elemento.hasOwnProperty('precoProduto')))
+
     localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
     limparFormulario(nomeProduto, qtdeProduto, categoria)
     document.querySelector('#produto').focus()
@@ -80,6 +82,79 @@ function criarItemDaCategoria(elementoAtual) {
     nome.innerHTML = elementoAtual.nomeProduto
     nome.classList.add('nome-produto')
 
+    const divInserirPreco = document.createElement('div')
+    divInserirPreco.classList.add('inserir-preco')
+    const divInput = document.createElement('div')
+    divInput.classList.add('divInput')
+    divInput.id = `div-input-${elementoAtual.id}`
+    
+    const input = document.createElement('input')
+    input.type = 'text'
+    const spanPreco = document.createElement('span')
+    spanPreco.classList.add('preco')
+    spanPreco.id = `preco-id-${elementoAtual.id}`
+    spanPreco.style.display = 'none'
+
+    if(elementoAtual.hasOwnProperty('preco')){
+        console.log('o elemento tem preco')
+        spanPreco.style.display = 'block'
+        spanPreco.innerHTML = `R$${elementoAtual.preco}`
+        input.style.display = 'none'
+    }else{
+        console.log('o elemento não tem preco')
+    }
+    // const elementoPrecoExiste = arrayDeElementos.find(elemento => ele)
+    // spanPreco.innerHTML = elementoAtual.preco
+
+    divInput.appendChild(input)
+    divInput.appendChild(spanPreco)
+
+    const formBotoes = document.createElement('form')
+    formBotoes.classList.add('btns')
+    const btnAlterarPreco = document.createElement('button')
+    btnAlterarPreco.innerHTML = 'O'
+    btnAlterarPreco.id = 'alterarPreco'
+    const btnSalvar = document.createElement('button')
+    btnSalvar.innerHTML = 'x'
+    btnSalvar.type = 'submit'
+    btnSalvar.id = 'salvarPreco'
+    formBotoes.appendChild(btnAlterarPreco)
+    formBotoes.appendChild(btnSalvar)
+
+    btnSalvar.addEventListener('click', (e) => {
+        e.preventDefault()
+        
+        const inputComPreco = btnSalvar.parentElement.parentElement.children[`div-input-${elementoAtual.id}`].children[0]
+        inputComPreco.style.display = 'none'
+        const preco = inputComPreco.value
+        const elementoPreco = btnSalvar.parentElement.parentElement.children[`div-input-${elementoAtual.id}`].children[`preco-id-${elementoAtual.id}`]
+        elementoPreco.style.display = 'block'
+        elementoPreco.innerHTML = `R$${preco}`
+
+        arrayDeElementos[elementoAtual.id].preco = preco
+        localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
+        console.log(arrayDeElementos)
+    })
+    btnAlterarPreco.addEventListener('click', (e) => {
+        e.preventDefault()
+
+        const elementoPreco = btnSalvar.parentElement.parentElement.children[`div-input-${elementoAtual.id}`].children[`preco-id-${elementoAtual.id}`]
+        elementoPreco.style.display = 'none'
+        
+        const inputComPreco = btnSalvar.parentElement.parentElement.children[`div-input-${elementoAtual.id}`].children[0]
+        inputComPreco.style.display = 'block'
+
+        inputComPreco.focus()
+
+        arrayDeElementos[elementoAtual.id].preco = inputComPreco.value
+        localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
+    })
+
+
+    divInserirPreco.appendChild(divInput)
+    divInserirPreco.appendChild(formBotoes)
+
+
     const btnExcluir = document.createElement('button')
     btnExcluir.innerHTML = 'x'
     btnExcluir.classList.add('btn-excluir-item')
@@ -94,6 +169,7 @@ function criarItemDaCategoria(elementoAtual) {
 
     li.appendChild(qtde)
     li.appendChild(nome)
+    li.appendChild(divInserirPreco)
     li.appendChild(btnExcluir)
 
     return li

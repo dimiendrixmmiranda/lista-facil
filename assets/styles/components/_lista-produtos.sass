@@ -1,16 +1,60 @@
+@import '../abstract/_variaveis'
 .lista-produtos
     display: flex
+    margin: 2em 0
     .lista
+        margin: 1em 0
         width: 300px
         height: fit-content
+        background-color: $cor-salmao
+        padding: .5em
+        box-shadow: 0 0 3px 2px black
+        h3
+            margin: .5em 0
+            font-size: 1.4em
+            font-weight: 400
+            font-family: $fonte-primaria
+            text-align: center
         .lista-item
             display: grid
-            grid-template-columns: 15% 1fr 20% 15%
+            grid-template-columns: 15% 1fr 30% 10%
             border: solid 1px black
             padding: .2rem .5rem
+            background-color: $cor-salmao-claro
+            color: $cor-branca
+            font-size: 1.2em
+            font-family: $fonte-secundaria
+            gap: .3em
             .qtde-produto
                 grid-column: 1/2
             .nome-produto
                 grid-column: 2/3
+            .inserir-preco
+                width: 100%
+                height: 25px
+                background-color: red
+                display: grid
+                grid-template-columns: 70% 1fr
+                .divInput
+                    grid-column: 1/2
+                    height: 25px
+                    display: flex
+                    input
+                        width: 100%
+                        height: 100%
+                    .preco
+                        width: 100%
+                        height: 100%
+                        text-align: center
+                        border: solid 1px black
+                        background-color: $cor-salmao
+                        font-size: .9em
+                .btns
+                    grid-column: 2/3
+                    display: grid
+                    grid-template-rows: 50% 50%
+                    overflow: hidden
+                    button
+                        font-size: .4em
             .btn-excluir-item
                 grid-column: 4/5

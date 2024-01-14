@@ -1,5 +1,6 @@
 @import 'https://fonts.googleapis.com/css2?family=Bakbak+One&family=Bebas+Neue&display=swap';
 @import 'https://fonts.googleapis.com/css2?family=Bakbak+One&family=Bebas+Neue&display=swap';
+@import 'https://fonts.googleapis.com/css2?family=Bakbak+One&family=Bebas+Neue&display=swap';
 * {
   margin: 0;
   padding: 0;
@@ -87,23 +88,73 @@ body {
 
 .lista-produtos {
   display: flex;
+  margin: 2em 0;
 }
 .lista-produtos .lista {
+  margin: 1em 0;
   width: 300px;
   height: -moz-fit-content;
   height: fit-content;
+  background-color: #d44949;
+  padding: 0.5em;
+  box-shadow: 0 0 3px 2px black;
+}
+.lista-produtos .lista h3 {
+  margin: 0.5em 0;
+  font-size: 1.4em;
+  font-weight: 400;
+  font-family: "Bakbak One", sans-serif;
+  text-align: center;
 }
 .lista-produtos .lista .lista-item {
   display: grid;
-  grid-template-columns: 15% 1fr 20% 15%;
+  grid-template-columns: 15% 1fr 30% 10%;
   border: solid 1px black;
   padding: 0.2rem 0.5rem;
+  background-color: #d67d7d;
+  color: #fff;
+  font-size: 1.2em;
+  font-family: "Bebas Neue", sans-serif;
+  gap: 0.3em;
 }
 .lista-produtos .lista .lista-item .qtde-produto {
   grid-column: 1/2;
 }
 .lista-produtos .lista .lista-item .nome-produto {
   grid-column: 2/3;
+}
+.lista-produtos .lista .lista-item .inserir-preco {
+  width: 100%;
+  height: 25px;
+  background-color: red;
+  display: grid;
+  grid-template-columns: 70% 1fr;
+}
+.lista-produtos .lista .lista-item .inserir-preco .divInput {
+  grid-column: 1/2;
+  height: 25px;
+  display: flex;
+}
+.lista-produtos .lista .lista-item .inserir-preco .divInput input {
+  width: 100%;
+  height: 100%;
+}
+.lista-produtos .lista .lista-item .inserir-preco .divInput .preco {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  border: solid 1px black;
+  background-color: #d44949;
+  font-size: 0.9em;
+}
+.lista-produtos .lista .lista-item .inserir-preco .btns {
+  grid-column: 2/3;
+  display: grid;
+  grid-template-rows: 50% 50%;
+  overflow: hidden;
+}
+.lista-produtos .lista .lista-item .inserir-preco .btns button {
+  font-size: 0.4em;
 }
 .lista-produtos .lista .lista-item .btn-excluir-item {
   grid-column: 4/5;
