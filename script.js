@@ -64,8 +64,30 @@ function criarCategoria(elementoAtual) {
     }
     const tituloUl = document.createElement('h3')
     tituloUl.innerHTML = elementoAtual.categoria
-    ul.appendChild(tituloUl)
+    
+    const btnExcluirLista = document.createElement('button')
+    btnExcluirLista.classList.add('btn-excluir-lista')
+    btnExcluirLista.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>'
+    btnExcluirLista.addEventListener('click', () => {
+        const listaLis = btnExcluirLista.parentElement.querySelectorAll('.lista-item')
+        const listaIdsExcluir = [] 
+        
+        listaLis.forEach(li => {
+            listaIdsExcluir.push(li.dataset.id)
+        })
+        
+        listaIdsExcluir.forEach(id => {
+            arrayDeElementos.splice(arrayDeElementos.findIndex(el => el.id == parseInt(id)), 1)
+            localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
+        })
+        
+        // remover da tela
+        btnExcluirLista.parentElement.remove()
+    })
 
+    ul.appendChild(tituloUl)
+    ul.appendChild(btnExcluirLista)
+    
     return ul
 }
 
@@ -112,10 +134,10 @@ function criarItemDaCategoria(elementoAtual) {
     const formBotoes = document.createElement('form')
     formBotoes.classList.add('btns')
     const btnAlterarPreco = document.createElement('button')
-    btnAlterarPreco.innerHTML = 'O'
+    btnAlterarPreco.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>'
     btnAlterarPreco.id = 'alterarPreco'
     const btnSalvar = document.createElement('button')
-    btnSalvar.innerHTML = 'x'
+    btnSalvar.innerHTML = '<i class="fa-regular fa-floppy-disk"></i>'
     btnSalvar.type = 'submit'
     btnSalvar.id = 'salvarPreco'
     formBotoes.appendChild(btnAlterarPreco)
@@ -156,13 +178,13 @@ function criarItemDaCategoria(elementoAtual) {
 
 
     const btnExcluir = document.createElement('button')
-    btnExcluir.innerHTML = 'x'
+    btnExcluir.innerHTML = '<i class="fa-solid fa-trash"></i>'
     btnExcluir.classList.add('btn-excluir-item')
 
     btnExcluir.addEventListener('click', (e) => {
         e.preventDefault()
-        e.srcElement.parentNode.remove()
-        const id = e.srcElement.parentNode.dataset.id
+        e.target.parentElement.parentElement.remove()
+        const id = e.target.parentElement.parentElement.dataset.id
         arrayDeElementos.splice(arrayDeElementos.findIndex(el => el.id == parseInt(id)), 1)
         localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
     })
