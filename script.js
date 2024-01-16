@@ -1,6 +1,7 @@
 const formulario = document.querySelector('#form')
 const elementoListaProdutos = document.querySelector('#listaProdutos')
 const arrayDeElementos = JSON.parse(localStorage.getItem("lista-elementos")) || []
+const elementoValorFinal = document.querySelector('#valorFinal')
 
 arrayDeElementos.forEach(elemento => {
     criarElemento(elemento)
@@ -43,7 +44,7 @@ function criarElemento(elementoAtual) {
         const categoria = criarCategoria(elementoAtual)
         const li = criarItemDaCategoria(elementoAtual)
         categoria.appendChild(li)
-        
+
         elementoListaProdutos.appendChild(categoria)
     } else {
         const categoria = document.querySelector(`[data-categoria="${elementoAtual.categoria}"]`)
@@ -64,30 +65,30 @@ function criarCategoria(elementoAtual) {
     }
     const tituloUl = document.createElement('h3')
     tituloUl.innerHTML = elementoAtual.categoria
-    
+
     const btnExcluirLista = document.createElement('button')
     btnExcluirLista.classList.add('btn-excluir-lista')
     btnExcluirLista.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>'
     btnExcluirLista.addEventListener('click', () => {
         const listaLis = btnExcluirLista.parentElement.querySelectorAll('.lista-item')
-        const listaIdsExcluir = [] 
-        
+        const listaIdsExcluir = []
+
         listaLis.forEach(li => {
             listaIdsExcluir.push(li.dataset.id)
         })
-        
+
         listaIdsExcluir.forEach(id => {
             arrayDeElementos.splice(arrayDeElementos.findIndex(el => el.id == parseInt(id)), 1)
             localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
         })
-        
+
         // remover da tela
         btnExcluirLista.parentElement.remove()
     })
 
     ul.appendChild(tituloUl)
     ul.appendChild(btnExcluirLista)
-    
+
     return ul
 }
 
@@ -109,7 +110,7 @@ function criarItemDaCategoria(elementoAtual) {
     const divInput = document.createElement('div')
     divInput.classList.add('divInput')
     divInput.id = `div-input-${elementoAtual.id}`
-    
+
     const input = document.createElement('input')
     input.type = 'text'
     const spanPreco = document.createElement('span')
@@ -117,16 +118,14 @@ function criarItemDaCategoria(elementoAtual) {
     spanPreco.id = `preco-id-${elementoAtual.id}`
     spanPreco.style.display = 'none'
 
-    if(elementoAtual.hasOwnProperty('preco')){
+    if (elementoAtual.hasOwnProperty('preco')) {
         console.log('o elemento tem preco')
         spanPreco.style.display = 'block'
         spanPreco.innerHTML = `R$${elementoAtual.preco}`
         input.style.display = 'none'
-    }else{
+    } else {
         console.log('o elemento não tem preco')
     }
-    // const elementoPrecoExiste = arrayDeElementos.find(elemento => ele)
-    // spanPreco.innerHTML = elementoAtual.preco
 
     divInput.appendChild(input)
     divInput.appendChild(spanPreco)
@@ -145,7 +144,7 @@ function criarItemDaCategoria(elementoAtual) {
 
     btnSalvar.addEventListener('click', (e) => {
         e.preventDefault()
-        
+
         const inputComPreco = btnSalvar.parentElement.parentElement.children[`div-input-${elementoAtual.id}`].children[0]
         inputComPreco.style.display = 'none'
         const preco = inputComPreco.value
@@ -155,14 +154,16 @@ function criarItemDaCategoria(elementoAtual) {
 
         arrayDeElementos[elementoAtual.id].preco = preco
         localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
-        console.log(arrayDeElementos)
+
+        atualizarPrecoFinal()
     })
+
     btnAlterarPreco.addEventListener('click', (e) => {
         e.preventDefault()
 
         const elementoPreco = btnSalvar.parentElement.parentElement.children[`div-input-${elementoAtual.id}`].children[`preco-id-${elementoAtual.id}`]
         elementoPreco.style.display = 'none'
-        
+
         const inputComPreco = btnSalvar.parentElement.parentElement.children[`div-input-${elementoAtual.id}`].children[0]
         inputComPreco.style.display = 'block'
 
@@ -187,6 +188,7 @@ function criarItemDaCategoria(elementoAtual) {
         const id = e.target.parentElement.parentElement.dataset.id
         arrayDeElementos.splice(arrayDeElementos.findIndex(el => el.id == parseInt(id)), 1)
         localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
+        atualizarPrecoFinal()
     })
 
     li.appendChild(qtde)
@@ -202,8 +204,32 @@ function atualizarElemento(elementoAtual) {
     arrayDeElementos[elementoAtual.id] = elementoAtual
 }
 
-function limparFormulario(nome, qtde, categoria){
+function limparFormulario(nome, qtde, categoria) {
     nome.value = ''
     qtde.value = ''
-    categoria. value = ''
+    categoria.value = ''
 }
+
+function atualizarPrecoFinal() {
+    const array = []
+    arrayDeElementos.forEach(produto => {
+        const precoAtual = produto.preco
+
+        if (!!precoAtual.match(/,/g)) {
+            const preco = precoAtual.replace(/,/g, '.')
+            const precoFinal = +preco * produto.qtdeProduto
+            array.push(precoFinal)
+        } else {
+            const precoFinal = +precoAtual * produto.qtdeProduto
+            array.push(precoFinal)
+        }
+    })
+
+    // refatorar o reduce
+    const valorCompraFinal = array.reduce((a, b) => a + b) 
+    elementoValorFinal.innerHTML = `R$${(valorCompraFinal)}`
+    console.log(valorCompraFinal)
+
+}
+
+atualizarPrecoFinal()

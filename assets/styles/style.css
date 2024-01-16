@@ -194,37 +194,21 @@ body {
   width: 325px;
   max-width: 325px;
   background-color: #d44949;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
   display: flex;
   flex-direction: column;
-  align-items: center;
   padding: 1em;
-  font-family: "Montserrat", sans-serif;
-  margin-bottom: 3em;
+  box-shadow: 2px 2px 5px black;
 }
 .total-precos h3 {
-  font-size: 2.3em;
-  font-weight: 400;
-  font-family: "Bakbak One", sans-serif;
-}
-.total-precos ul {
-  width: 100%;
-  list-style: none;
-  font-weight: 200;
-  display: flex;
-  flex-direction: column;
-  row-gap: 0.3em;
-}
-.total-precos ul h2 {
-  margin: 0.5em 0;
-}
-.total-precos ul li {
-  display: flex;
-  font-size: 1.3em;
-  gap: 0.5em;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2em;
 }
 .total-precos .total-precos-final {
-  width: 100%;
-  font-size: 1.6em;
-  text-align: center;
-  margin-top: 1em;
+  font-size: 1.5em;
+  font-weight: 600;
+  background-color: #fca624;
+  padding: 0.4em;
+  box-shadow: 0 0 3px black;
 }/*# sourceMappingURL=style.css.map */
