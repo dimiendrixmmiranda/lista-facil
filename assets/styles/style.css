@@ -29,24 +29,21 @@ body {
   padding: 1rem;
   background-color: #d44949;
   box-shadow: 5px 5px 10px 2px black;
-  margin-top: 1em;
+  margin-top: 3em;
 }
 .container .imagem {
-  height: 300px;
+  height: 180px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.2em;
+  margin-bottom: 1.5em;
 }
 .container .imagem h2 {
   font-size: 3em;
   font-family: "Bakbak One", sans-serif;
   font-weight: 300;
-  text-align: center;
-}
-.container .imagem span {
   text-align: center;
 }
 .container .imagem img {
@@ -125,6 +122,8 @@ body {
   background-color: transparent;
   border: none;
   font-size: 25px;
+  color: #fff;
+  cursor: pointer;
 }
 .lista-produtos .lista .lista-item {
   display: grid;
@@ -176,18 +175,21 @@ body {
   display: grid;
   grid-template-rows: 50% 50%;
   overflow: hidden;
-  row-gap: 2px;
 }
 .lista-produtos .lista .lista-item .inserir-preco .btns button {
   font-size: 0.6em;
 }
-.lista-produtos .lista .lista-item .btn-excluir-item {
+.lista-produtos .lista .lista-item .btn-pegar-excluir-item {
   grid-column: 4/5;
-  font-size: 1em;
-  background: transparent;
-  border: none;
-  color: #000E21;
-  cursor: pointer;
+  display: grid;
+  grid-template-rows: repeat(1fr, 2);
+  row-gap: 0.1em;
+}
+.lista-produtos .lista .lista-item .btn-pegar-excluir-item button {
+  font-size: 0.8em;
+}
+.lista-produtos .lista .active {
+  background-color: green;
 }
 
 .total-precos {
@@ -199,7 +201,7 @@ body {
   display: flex;
   flex-direction: column;
   padding: 1em;
-  box-shadow: 2px 2px 5px black;
+  box-shadow: 0 0 3px 2px black;
 }
 .total-precos h3 {
   font-family: "Bebas Neue", sans-serif;

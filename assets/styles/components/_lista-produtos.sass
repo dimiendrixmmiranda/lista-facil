@@ -28,6 +28,8 @@
             background-color: transparent
             border: none
             font-size: 25px
+            color: $cor-branca
+            cursor: pointer
         .lista-item
             display: grid
             grid-template-columns: 15% 1fr 35% 10%
@@ -71,13 +73,14 @@
                     display: grid
                     grid-template-rows: 50% 50%
                     overflow: hidden
-                    row-gap: 2px
                     button
                         font-size: .6em
-            .btn-excluir-item
+            .btn-pegar-excluir-item
                 grid-column: 4/5
-                font-size: 1em
-                background: transparent
-                border: none
-                color: $cor-azul-escuro
-                cursor: pointer
+                display: grid
+                grid-template-rows: repeat(1fr, 2)
+                row-gap: .1em
+                button
+                    font-size: .8em
+        .active
+            background-color: green

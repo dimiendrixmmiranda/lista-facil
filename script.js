@@ -30,8 +30,6 @@ formulario.addEventListener('submit', (e) => {
         arrayDeElementos.push(elementoAtual)
     }
 
-    // const elementoTemPreco = arrayDeElementos.find(elemento => console.log(elemento.hasOwnProperty('precoProduto')))
-
     localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
     limparFormulario(nomeProduto, qtdeProduto, categoria)
     document.querySelector('#produto').focus()
@@ -119,12 +117,9 @@ function criarItemDaCategoria(elementoAtual) {
     spanPreco.style.display = 'none'
 
     if (elementoAtual.hasOwnProperty('preco')) {
-        console.log('o elemento tem preco')
         spanPreco.style.display = 'block'
         spanPreco.innerHTML = `R$${elementoAtual.preco}`
         input.style.display = 'none'
-    } else {
-        console.log('o elemento não tem preco')
     }
 
     divInput.appendChild(input)
@@ -177,24 +172,40 @@ function criarItemDaCategoria(elementoAtual) {
     divInserirPreco.appendChild(divInput)
     divInserirPreco.appendChild(formBotoes)
 
+    const btnsPegarExcluir = document.createElement('div')
+    btnsPegarExcluir.classList.add('btn-pegar-excluir-item')
 
     const btnExcluir = document.createElement('button')
     btnExcluir.innerHTML = '<i class="fa-solid fa-trash"></i>'
     btnExcluir.classList.add('btn-excluir-item')
+    
+    const btnPegar = document.createElement('button')
+    btnPegar.innerHTML = '<i class="fa-solid fa-circle-check"></i>'
+    btnPegar.classList.add('btn-pegar-item')
 
     btnExcluir.addEventListener('click', (e) => {
         e.preventDefault()
-        e.target.parentElement.parentElement.remove()
-        const id = e.target.parentElement.parentElement.dataset.id
+        const ulPai = e.target.closest('.lista-item')
+        ulPai.remove()
+        const id = e.target.closest('.lista-item').dataset.id
         arrayDeElementos.splice(arrayDeElementos.findIndex(el => el.id == parseInt(id)), 1)
+        
         localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
         atualizarPrecoFinal()
     })
 
+    btnPegar.addEventListener('click', (e) => {
+        const itemLi = e.target.closest('.lista-item')
+        itemLi.classList.toggle('active')
+    })
+
+    btnsPegarExcluir.appendChild(btnPegar)
+    btnsPegarExcluir.appendChild(btnExcluir)
+    
     li.appendChild(qtde)
     li.appendChild(nome)
     li.appendChild(divInserirPreco)
-    li.appendChild(btnExcluir)
+    li.appendChild(btnsPegarExcluir)
 
     return li
 }
@@ -214,22 +225,25 @@ function atualizarPrecoFinal() {
     const array = []
     arrayDeElementos.forEach(produto => {
         const precoAtual = produto.preco
-
-        if (!!precoAtual.match(/,/g)) {
-            const preco = precoAtual.replace(/,/g, '.')
-            const precoFinal = +preco * produto.qtdeProduto
-            array.push(precoFinal)
-        } else {
-            const precoFinal = +precoAtual * produto.qtdeProduto
-            array.push(precoFinal)
+        if(precoAtual != undefined){
+            if (!!precoAtual.match(/,/g)) {
+                const preco = precoAtual.replace(/,/g, '.')
+                const precoFinal = +preco * produto.qtdeProduto
+                array.push(precoFinal)
+            } else {
+                const precoFinal = +precoAtual * produto.qtdeProduto
+                array.push(precoFinal)
+            }
         }
     })
 
     // refatorar o reduce
-    const valorCompraFinal = array.reduce((a, b) => a + b) 
-    elementoValorFinal.innerHTML = `R$${(valorCompraFinal)}`
-    console.log(valorCompraFinal)
-
+    if(array.length > 0){
+        const valorCompraFinal = array.reduce((a, b) => a + b)
+        elementoValorFinal.innerHTML = `R$${(valorCompraFinal).toFixed(2)}`
+    }else{
+        elementoValorFinal.innerHTML = 'R$0'
+    }
 }
 
 atualizarPrecoFinal()
