@@ -178,20 +178,27 @@ function criarItemDaCategoria(elementoAtual) {
     const btnExcluir = document.createElement('button')
     btnExcluir.innerHTML = '<i class="fa-solid fa-trash"></i>'
     btnExcluir.classList.add('btn-excluir-item')
-    
+
     const btnPegar = document.createElement('button')
     btnPegar.innerHTML = '<i class="fa-solid fa-circle-check"></i>'
     btnPegar.classList.add('btn-pegar-item')
 
     btnExcluir.addEventListener('click', (e) => {
         e.preventDefault()
-        const ulPai = e.target.closest('.lista-item')
-        ulPai.remove()
+        const liPai = e.target.closest('.lista-item')
+        liPai.remove()
         const id = e.target.closest('.lista-item').dataset.id
         arrayDeElementos.splice(arrayDeElementos.findIndex(el => el.id == parseInt(id)), 1)
-        
+
+        const listaPai = document.querySelector(`[data-categoria="${elementoAtual.categoria}"]`)
+
+        if (listaPai.children.length <= 2) {
+            listaPai.remove()
+        }
+
         localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
         atualizarPrecoFinal()
+
     })
 
     btnPegar.addEventListener('click', (e) => {
@@ -201,7 +208,7 @@ function criarItemDaCategoria(elementoAtual) {
 
     btnsPegarExcluir.appendChild(btnPegar)
     btnsPegarExcluir.appendChild(btnExcluir)
-    
+
     li.appendChild(qtde)
     li.appendChild(nome)
     li.appendChild(divInserirPreco)
@@ -225,7 +232,7 @@ function atualizarPrecoFinal() {
     const array = []
     arrayDeElementos.forEach(produto => {
         const precoAtual = produto.preco
-        if(precoAtual != undefined){
+        if (precoAtual != undefined) {
             if (!!precoAtual.match(/,/g)) {
                 const preco = precoAtual.replace(/,/g, '.')
                 const precoFinal = +preco * produto.qtdeProduto
@@ -238,10 +245,10 @@ function atualizarPrecoFinal() {
     })
 
     // refatorar o reduce
-    if(array.length > 0){
+    if (array.length > 0) {
         const valorCompraFinal = array.reduce((a, b) => a + b)
         elementoValorFinal.innerHTML = `R$${(valorCompraFinal).toFixed(2)}`
-    }else{
+    } else {
         elementoValorFinal.innerHTML = 'R$0'
     }
 }
