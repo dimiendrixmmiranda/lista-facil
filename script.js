@@ -18,7 +18,8 @@ formulario.addEventListener('submit', (e) => {
     const elementoAtual = {
         "nomeProduto": nomeProduto.value,
         'qtdeProduto': qtdeProduto.value,
-        'categoria': categoria.value
+        'categoria': categoria.value,
+        'itemPego': false
     }
 
     if (elementoExisteNoArray) {
@@ -77,6 +78,7 @@ function criarCategoria(elementoAtual) {
 
         listaIdsExcluir.forEach(id => {
             arrayDeElementos.splice(arrayDeElementos.findIndex(el => el.id == parseInt(id)), 1)
+            atualizarPrecoFinal()
             localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
         })
 
@@ -202,10 +204,21 @@ function criarItemDaCategoria(elementoAtual) {
     })
 
     btnPegar.addEventListener('click', (e) => {
-        const itemLi = e.target.closest('.lista-item')
-        itemLi.classList.toggle('active')
+        const id = btnPegar.closest('.lista-item').dataset.id
+        if(arrayDeElementos[id].itemPego == false){
+            arrayDeElementos[id].itemPego = true
+            li.classList.toggle('active')
+        }else{
+            li.classList.toggle('active')
+            arrayDeElementos[id].itemPego = false
+        }
+        localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
     })
-
+    
+    if(elementoAtual.itemPego){
+        li.classList.toggle('active')
+    }
+    
     btnsPegarExcluir.appendChild(btnPegar)
     btnsPegarExcluir.appendChild(btnExcluir)
 
