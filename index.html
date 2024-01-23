@@ -15,11 +15,11 @@
         </div>
         <form action="" class="formulario" id="form" autocomplete="off">
             <label for="produto">Digite o nome do produto:</label>
-            <input type="text" id="produto">
+            <input type="text" id="produto" required minlength="2">
             <label for="quantidade">Digite a quantidade:</label>
-            <input type="text" id="quantidade">
+            <input type="text" id="quantidade" required minlength="1" pattern="(\d+)|(\d+(\.|,)\d+kg)|(\d+g)">
             <label for="categoria">Selecione a categoria:</label>
-            <select name="selecionar-categoria" id="categoria">
+            <select name="selecionar-categoria" id="categoria" required>
                 <option value="">Selecione</option>
                 <option value="Produtos Gerais">Produtos Gerais</option>
                 <option value="Frutas">Frutas</option>

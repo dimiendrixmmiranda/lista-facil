@@ -98,7 +98,7 @@ function criarItemDaCategoria(elementoAtual) {
     li.dataset.id = elementoAtual.id
 
     const qtde = document.createElement('span')
-    qtde.innerHTML = elementoAtual.qtdeProduto
+    qtde.innerHTML = elementoAtual.qtdeProduto.replace('.', ',')
     qtde.classList.add('qtde-produto')
 
     const nome = document.createElement('span')
@@ -120,7 +120,7 @@ function criarItemDaCategoria(elementoAtual) {
 
     if (elementoAtual.hasOwnProperty('preco')) {
         spanPreco.style.display = 'block'
-        spanPreco.innerHTML = `R$${elementoAtual.preco}`
+        spanPreco.innerHTML = `R$${elementoAtual.preco.replace('.', ',')}`
         input.style.display = 'none'
     }
 
@@ -147,8 +147,7 @@ function criarItemDaCategoria(elementoAtual) {
         const preco = inputComPreco.value
         const elementoPreco = btnSalvar.parentElement.parentElement.children[`div-input-${elementoAtual.id}`].children[`preco-id-${elementoAtual.id}`]
         elementoPreco.style.display = 'block'
-        elementoPreco.innerHTML = `R$${preco}`
-
+        elementoPreco.innerHTML = `R$${preco.replace('.', ',')}`
         arrayDeElementos[elementoAtual.id].preco = preco
         localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
 
@@ -205,22 +204,22 @@ function criarItemDaCategoria(elementoAtual) {
 
     btnPegar.addEventListener('click', (e) => {
         const id = btnPegar.closest('.lista-item').dataset.id
-        if(arrayDeElementos[id].itemPego == false){
+        if (arrayDeElementos[id].itemPego == false) {
             arrayDeElementos[id].itemPego = true
             li.classList.toggle('active')
-            e.target.parentElement.innerHTML = '<i class="fa-solid fa-xmark"></i>' 
-        }else{
+            e.target.parentElement.innerHTML = '<i class="fa-solid fa-xmark"></i>'
+        } else {
             li.classList.toggle('active')
             arrayDeElementos[id].itemPego = false
-            e.target.parentElement.innerHTML ='<i class="fa-solid fa-circle-check"></i>'
+            e.target.parentElement.innerHTML = '<i class="fa-solid fa-circle-check"></i>'
         }
         localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
     })
-    
-    if(elementoAtual.itemPego){
+
+    if (elementoAtual.itemPego) {
         li.classList.toggle('active')
     }
-    
+
     btnsPegarExcluir.appendChild(btnPegar)
     btnsPegarExcluir.appendChild(btnExcluir)
 
@@ -246,23 +245,26 @@ function limparFormulario(nome, qtde, categoria) {
 function atualizarPrecoFinal() {
     const array = []
     arrayDeElementos.forEach(produto => {
-        const precoAtual = produto.preco
-        if (precoAtual != undefined) {
-            if (!!precoAtual.match(/,/g)) {
-                const preco = precoAtual.replace(/,/g, '.')
-                const precoFinal = +preco * produto.qtdeProduto
-                array.push(precoFinal)
-            } else {
-                const precoFinal = +precoAtual * produto.qtdeProduto
-                array.push(precoFinal)
+        if (produto.preco != undefined) {
+            const precoAtual = produto.preco.replace(',', '.')
+            let qtdeAtual = produto.qtdeProduto.replace(',', '.')
+
+            if(qtdeAtual.match(/g/g)){
+                if(qtdeAtual.match(/\./g)){
+                    qtdeAtual = qtdeAtual.split('kg')[0]
+                }else{
+                    qtdeAtual = '0.' + qtdeAtual.split('g')[0]
+                }
             }
+
+            const precoFinal = parseFloat((parseFloat(qtdeAtual) * parseFloat(precoAtual)).toFixed(2))
+            array.push(precoFinal)
         }
     })
-
     // refatorar o reduce
     if (array.length > 0) {
-        const valorCompraFinal = array.reduce((a, b) => a + b)
-        elementoValorFinal.innerHTML = `R$${(valorCompraFinal).toFixed(2)}`
+        const valorFinalDaCompra = array.reduce((a, b) => a + b)
+        elementoValorFinal.innerHTML = `R$${(valorFinalDaCompra).toFixed(2)}`
     } else {
         elementoValorFinal.innerHTML = 'R$0'
     }
