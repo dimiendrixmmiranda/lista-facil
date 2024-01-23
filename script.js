@@ -208,9 +208,11 @@ function criarItemDaCategoria(elementoAtual) {
         if(arrayDeElementos[id].itemPego == false){
             arrayDeElementos[id].itemPego = true
             li.classList.toggle('active')
+            e.target.parentElement.innerHTML = '<i class="fa-solid fa-xmark"></i>' 
         }else{
             li.classList.toggle('active')
             arrayDeElementos[id].itemPego = false
+            e.target.parentElement.innerHTML ='<i class="fa-solid fa-circle-check"></i>'
         }
         localStorage.setItem("lista-elementos", JSON.stringify(arrayDeElementos))
     })
