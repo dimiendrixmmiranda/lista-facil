@@ -7,10 +7,6 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --vermelho: #F5512B;
-  --azul: #079fc5;
-  --azul-escuro: #023fc2;
-  --preto: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,24 +20,4 @@ body {
   color: var(--foreground);
   background: var(--vermelho);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-* {
-  font-family: 'Poppins', sans-serif;
-}
-
-.fonteEspecial {
-  font-family: "Slackey", serif;
-}
-
-.respostaRevelada {
-  transform: rotateY(180deg);
-  transition: 0.8s ease;
-  perspective: 1000px; /* Isso deve estar no elemento PAI */
-  transform-style: preserve-3d; /* Adicione essa linha */
-}
-
-.respostaRevelada div:nth-child(2) {
-  transform: rotateY(180deg);
-  transform-style: preserve-3d;
 }

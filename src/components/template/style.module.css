@@ -1,6 +1,0 @@
-.template{
-    display: grid;
-    grid-template-rows: 1fr auto;
-    width: 100%;
-    min-height: 100vh;
-}
