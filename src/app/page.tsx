@@ -1,5 +1,7 @@
 "use client";
 
+import Formulario from "@/components/Formulario";
+import FormularioAlterarProduto from "@/components/FormularioAlterarProduto";
 import GerarPDF from "@/components/GerarPDF";
 import CaixaDeDialogo from "@/interfaces/CaixaDeDialogo";
 import ListaDeProdutos from "@/interfaces/ListaDeProdutos";
@@ -33,6 +35,7 @@ export default function Home() {
 	const [categoriaAlterado, setCategoriaAlterado] = useState("");
 	const [precoAlterado, setPrecoAlterado] = useState("");
 	const [itemPegoAlterado, setItemPegoAlterado] = useState(false);
+	const [produtoParaAlterar, setProdutoParaAlterar] = useState<Produto | null>(null);
 
 	useEffect(() => {
 		const produtosSalvos = localStorage.getItem("produtos");
@@ -91,13 +94,53 @@ export default function Home() {
 		categoria: ListaDeProdutos,
 		produtoDaCategoria: Produto
 	) {
-		e.preventDefault()
-		setVisibleFormularioAlterado(true)
-		setProdutoAlterado(produtoDaCategoria.produto)
-		setQuantidadeAlterado(produtoDaCategoria.quantidade)
-		setCategoriaAlterado(produtoDaCategoria.categoria)
-		setPrecoAlterado(produtoDaCategoria.preco ? produtoDaCategoria.preco : '')
-		setItemPegoAlterado(produtoDaCategoria.itemPego)
+		e.preventDefault();
+		setVisibleFormularioAlterado(true);
+		setProdutoAlterado(produtoDaCategoria.produto);
+		setQuantidadeAlterado(produtoDaCategoria.quantidade);
+		setCategoriaAlterado(produtoDaCategoria.categoria);
+		setPrecoAlterado(produtoDaCategoria.preco ? produtoDaCategoria.preco : '');
+		setItemPegoAlterado(produtoDaCategoria.itemPego);
+		setProdutoParaAlterar(produtoDaCategoria); // Armazena o produto a ser alterado
+	}
+
+	function salvarAlteracaoDoProduto(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		if (!produtoParaAlterar) return;
+	
+		// Criar uma cópia da lista sem o produto que está sendo alterado
+		const novaLista = listaDeProdutos.map(categoria => ({
+			...categoria,
+			listaDeProdutos: categoria.listaDeProdutos.filter(produto => produto.id !== produtoParaAlterar.id),
+		}));
+	
+		// Verificar se a categoria alterada já existe
+		const categoriaExistente = novaLista.find(cat => cat.categoria === categoriaAlterado);
+	
+		// Criar o produto atualizado
+		const produtoAtualizado: Produto = {
+			...produtoParaAlterar,
+			produto: produtoAlterado,
+			quantidade: quantidadeAlterado,
+			categoria: categoriaAlterado,
+			preco: precoAlterado,
+			itemPego: itemPegoAlterado,
+		};
+	
+		if (categoriaExistente) {
+			// Adicionar à categoria existente
+			categoriaExistente.listaDeProdutos.push(produtoAtualizado);
+		} else {
+			// Criar nova categoria e adicionar o produto
+			novaLista.push({ categoria: categoriaAlterado, listaDeProdutos: [produtoAtualizado], id: gerarId() });
+		}
+	
+		// Atualizar estado e localStorage
+		setListaDeProdutos(novaLista);
+		localStorage.setItem("produtos", JSON.stringify(novaLista));
+	
+		// Fechar o formulário de alteração
+		setVisibleFormularioAlterado(false);
 	}
 
 	function adicionarPrecoNoProduto(
@@ -189,139 +232,34 @@ export default function Home() {
 	return (
 		<div className="min-w-screen min-h-screen bg-blue-500 p-4">
 			{/* Formulário */}
-			<div>
-				<form className="bg-orange-400 p-2 rounded-lg flex flex-col gap-2 text-black">
-					<fieldset className="flex flex-col">
-						<label htmlFor="nome">Produto:</label>
-						<input
-							type="text"
-							name="nome"
-							id="nome"
-							className="h-[30px] p-2"
-							value={produto}
-							onChange={(e) => setProduto(e.target.value)}
-						/>
-					</fieldset>
-					<fieldset className="flex flex-col">
-						<label htmlFor="quantidade">QTDE</label>
-						<input
-							type="text"
-							name="quantidade"
-							id="quantidade"
-							className="h-[30px] p-2"
-							value={quantidade}
-							onChange={(e) => setQuantidade(e.target.value)}
-						/>
-					</fieldset>
-					<fieldset className="flex flex-col">
-						<label htmlFor="categoria">Categoria</label>
-						<select
-							name="categoria"
-							id="categoria"
-							value={categoria}
-							onChange={(e) => setCategoria(e.target.value)}
-							className="h-[30px] px-2"
-						>
-							<option value="">Selecione</option>
-							<option value="geral">Geral</option>
-							<option value="hortifruti">Hortifruti</option>
-							<option value="bebidas">Bebidas</option>
-							<option value="carnes">Carnes</option>
-							<option value="frios">Frios</option>
-							<option value="congelados">Congelados</option>
-							<option value="produtos-de-limpeza">Produtos de Limpeza</option>
-							<option value="higiene-pessoal">Higiene Pessoal</option>
-							<option value="petshop">Petshop</option>
-							<option value="outros">Outros</option>
-						</select>
-					</fieldset>
-					<button
-						className="bg-green-500 py-1 text-xl font-bold uppercase mt-2"
-						onClick={(e) => criarProduto(e)}
-					>
-						Adicionar Produto
-					</button>
-				</form>
-			</div>
+			<Formulario
+				produto={produto}
+				quantidade={quantidade}
+				categoria={categoria}
+				setCategoria={setCategoria}
+				setProduto={setProduto}
+				setQuantidade={setQuantidade}
+				criarProduto={criarProduto}
+			></Formulario>
 
 			{/* Formulario de Alterar Produto */}
 			{
 				visibleFormularioAlterado ? (
-					<div className="absolute top-[50%] left-[50%] w-full max-w-[300px]" style={{ transform: 'translate(-50%, -50%)' }}>
-						<form className="bg-orange-400 p-2 rounded-lg flex flex-col gap-2 text-black">
-							<fieldset className="flex flex-col">
-								<label htmlFor="nomeAlterado">Produto:</label>
-								<input
-									type="text"
-									name="nomeAlterado"
-									id="nomeAlterado"
-									className="h-[30px] p-2"
-									value={produtoAlterado}
-									onChange={(e) => setProdutoAlterado(e.target.value)}
-								/>
-							</fieldset>
-							<fieldset className="flex flex-col">
-								<label htmlFor="quantidadeAlterado">QTDE</label>
-								<input
-									type="text"
-									name="quantidadeAlterado"
-									id="quantidadeAlterado"
-									className="h-[30px] p-2"
-									value={quantidadeAlterado}
-									onChange={(e) => setQuantidadeAlterado(e.target.value)}
-								/>
-							</fieldset>
-							<fieldset className="flex flex-col">
-								<label htmlFor="categoriaAlterado">Categoria</label>
-								<select
-									name="categoriaAlterado"
-									id="categoriaAlterado"
-									value={categoriaAlterado}
-									onChange={(e) => setCategoriaAlterado(e.target.value)}
-									className="h-[30px] px-2"
-								>
-									<option value="">Selecione</option>
-									<option value="geral">Geral</option>
-									<option value="hortifruti">Hortifruti</option>
-									<option value="bebidas">Bebidas</option>
-									<option value="carnes">Carnes</option>
-									<option value="frios">Frios</option>
-									<option value="congelados">Congelados</option>
-									<option value="produtos-de-limpeza">Produtos de Limpeza</option>
-									<option value="higiene-pessoal">Higiene Pessoal</option>
-									<option value="petshop">Petshop</option>
-									<option value="outros">Outros</option>
-								</select>
-							</fieldset>
-
-							<fieldset className="flex flex-col">
-								<label htmlFor="precoAlterado">Preco</label>
-								<input type="text" name="precoAlterado" id="precoAlterado" value={precoAlterado}
-									onChange={(e) => setPrecoAlterado(e.target.value)} />
-							</fieldset>
-
-							<fieldset className="flex">
-								<label htmlFor="itemPegoAlterado">Item ja foi pego?</label>
-								<input type="checkbox" name="itemPegoAlterado" id="itemPegoAlterado" checked={itemPegoAlterado} onChange={(e) => setItemPegoAlterado(e.target.checked)} />
-							</fieldset>
-							<div className="grid grid-cols-2 gap-2">
-								<button
-									className="bg-green-500 py-1 text-xl font-bold uppercase mt-2"
-								// onClick={(e) => criarProduto(e)}
-								>
-									Alterar
-								</button>
-								<button
-									className="bg-green-500 py-1 text-xl font-bold uppercase mt-2"
-									onClick={(e) => cancelarAlteracaoDoProduto(e, setVisibleFormularioAlterado)}
-								>
-									Cancelar
-								</button>
-
-							</div>
-						</form>
-					</div>
-
+					<FormularioAlterarProduto
+						cancelarAlteracaoDoProduto={cancelarAlteracaoDoProduto}
+						categoriaAlterado={categoriaAlterado}
+						itemPegoAlterado={itemPegoAlterado}
+						precoAlterado={precoAlterado}
+						produtoAlterado={produtoAlterado}
+						quantidadeAlterado={quantidadeAlterado}
+						setCategoriaAlterado={setCategoriaAlterado}
+						setItemPegoAlterado={setItemPegoAlterado}
+						setPrecoAlterado={setPrecoAlterado}
+						setProdutoAlterado={setProdutoAlterado}
+						setQuantidadeAlterado={setQuantidadeAlterado}
+						setVisibleFormularioAlterado={setVisibleFormularioAlterado}
+						salvarAlteracaoDoProduto={salvarAlteracaoDoProduto}
+					></FormularioAlterarProduto>
 				) : ('')
 			}
 
