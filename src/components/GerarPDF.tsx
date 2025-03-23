@@ -3,9 +3,12 @@ import { useEffect, useState } from "react";
 import ListaDeProdutos from "@/interfaces/ListaDeProdutos";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import formatarData from "@/utils/formatarData";
 
 export default function GerarPDF() {
     const [listaDeProdutos, setListaDeProdutos] = useState<ListaDeProdutos[]>([]);
+    const [visibleCaixa, setVisibleCaixa] = useState(false)
+    const [nomeMercado, setNomeMercado] = useState('')
 
     useEffect(() => {
         const produtosSalvos = localStorage.getItem("produtos");
@@ -24,19 +27,16 @@ export default function GerarPDF() {
         }
     }, []);
 
-
-    const data = '22/03/2025 - 14:30'
-    const mercado = 'Supermercado Compre Mais'
-
-    function generatePDF() {
+    function generatePDF(nomeDoMercado?: string) {
         const doc = new jsPDF();
+        const data = new Date()
 
         // Adicionando o nome do mercado acima da tabela
         const marketFontSize = 14;
         const marketYPosition = 20;
 
         doc.setFontSize(marketFontSize);
-        doc.text(mercado, doc.internal.pageSize.getWidth() / 2, marketYPosition, { align: 'center' });
+        doc.text(nomeDoMercado ? nomeDoMercado : '', doc.internal.pageSize.getWidth() / 2, marketYPosition, { align: 'center' });
 
         const head = [['Categoria', 'Produto', 'Quantidade', 'Preço Unitário', 'Preço Total']];
         const body: (string | number)[][] = [];
@@ -72,7 +72,7 @@ export default function GerarPDF() {
 
         // Adicionando o rodapé (data)
         const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        const footerText = data;
+        const footerText = formatarData(data);
         const footerFontSize = 10;
         const footerYPosition = pageHeight - 20;
 
@@ -80,12 +80,20 @@ export default function GerarPDF() {
         doc.text(footerText, doc.internal.pageSize.getWidth() / 2, footerYPosition, { align: 'center' });
 
         doc.save('tabela_produtos.pdf');
+        setVisibleCaixa(false)
     }
-
 
     return (
         <div className="bg-green-400">
-            <button onClick={generatePDF}>Gerar PDF</button>
+            <div className={`absolute top-[50%] left-[50%] bg-green-600 ${visibleCaixa ? 'block': 'hidden'}`} style={{ transform: 'translate(-50%,-50%)' }}>
+                <h2>Deseja Adicionar o nome do mercado?</h2>
+                <input className="text-black" type="text" name="nomeMercado" id="nomeMercado" value={nomeMercado} onChange={(e) => setNomeMercado(e.target.value)} />
+                <div className="grid grid-cols-2 gap-2">
+                    <button onClick={() => generatePDF(nomeMercado)}>Sim</button>
+                    <button onClick={() => generatePDF()}>Não</button>
+                </div>
+            </div>
+            <button onClick={() => setVisibleCaixa(true)}>Gerar PDF</button>
         </div>
     );
 }

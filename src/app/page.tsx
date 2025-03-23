@@ -2,23 +2,22 @@
 
 import Formulario from "@/components/Formulario";
 import FormularioAlterarProduto from "@/components/FormularioAlterarProduto";
+import GerarCaixaDeMensagem from "@/components/GerarCaixaDeMensagem";
 import GerarPDF from "@/components/GerarPDF";
-import CaixaDeDialogo from "@/interfaces/CaixaDeDialogo";
 import ListaDeProdutos from "@/interfaces/ListaDeProdutos";
 import Produto from "@/interfaces/Produto";
 import ajustarTituloCategoria from "@/utils/ajustarTituloCategoria";
 import calcularValorFinalProduto from "@/utils/calcularValorFinalProduto";
 import cancelarAlteracaoDoProduto from "@/utils/cancelarAlteracaoDoProduto";
 import deletarItemDaLista from "@/utils/deletarItemDaLista";
-import gerarCaixaDeDialogo from "@/utils/gerarCaixaDeDialogo";
 import gerarId from "@/utils/gerarId";
 import limparVarios from "@/utils/limparFormularios";
-import ocultarCaixaDePergunta from "@/utils/ocultarCaixaDePergunta";
 import { useState, useEffect } from "react";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import { CiEdit } from "react-icons/ci";
 import { FaCheckSquare, FaTrashAlt } from "react-icons/fa";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+import { PiX } from "react-icons/pi";
 
 export default function Home() {
 	const [produto, setProduto] = useState("");
@@ -26,7 +25,8 @@ export default function Home() {
 	const [categoria, setCategoria] = useState("");
 	const [listaDeProdutos, setListaDeProdutos] = useState<ListaDeProdutos[]>([]);
 
-	const [caixaDeDialogo, setCaixaDeDialogo] = useState<CaixaDeDialogo | null>(null);
+	const [visibleExcluirCategoria, setVisibleExcluirCategoria] = useState(false)
+	const [visibleExcluirItemDaCategoria, setVisibleExcluirItemDaCategoria] = useState(false)
 
 	// Estados do formulario alterado
 	const [visibleFormularioAlterado, setVisibleFormularioAlterado] = useState(false)
@@ -107,16 +107,16 @@ export default function Home() {
 	function salvarAlteracaoDoProduto(e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
 		if (!produtoParaAlterar) return;
-	
+
 		// Criar uma cópia da lista sem o produto que está sendo alterado
 		const novaLista = listaDeProdutos.map(categoria => ({
 			...categoria,
 			listaDeProdutos: categoria.listaDeProdutos.filter(produto => produto.id !== produtoParaAlterar.id),
 		}));
-	
+
 		// Verificar se a categoria alterada já existe
 		const categoriaExistente = novaLista.find(cat => cat.categoria === categoriaAlterado);
-	
+
 		// Criar o produto atualizado
 		const produtoAtualizado: Produto = {
 			...produtoParaAlterar,
@@ -126,7 +126,7 @@ export default function Home() {
 			preco: precoAlterado,
 			itemPego: itemPegoAlterado,
 		};
-	
+
 		if (categoriaExistente) {
 			// Adicionar à categoria existente
 			categoriaExistente.listaDeProdutos.push(produtoAtualizado);
@@ -134,11 +134,11 @@ export default function Home() {
 			// Criar nova categoria e adicionar o produto
 			novaLista.push({ categoria: categoriaAlterado, listaDeProdutos: [produtoAtualizado], id: gerarId() });
 		}
-	
+
 		// Atualizar estado e localStorage
 		setListaDeProdutos(novaLista);
 		localStorage.setItem("produtos", JSON.stringify(novaLista));
-	
+
 		// Fechar o formulário de alteração
 		setVisibleFormularioAlterado(false);
 	}
@@ -229,6 +229,11 @@ export default function Home() {
 		})
 	}
 
+	function excluirTodosOsItensDaCategoria(e: React.MouseEvent<HTMLButtonElement>, categoria: ListaDeProdutos) {
+		e.preventDefault()
+		categoria.listaDeProdutos.map(item => deletarItemDaLista(e, categoria, item, setListaDeProdutos, setVisibleExcluirItemDaCategoria))
+	}
+
 	return (
 		<div className="min-w-screen min-h-screen bg-blue-500 p-4">
 			{/* Formulário */}
@@ -269,14 +274,25 @@ export default function Home() {
 					{listaDeProdutos.length > 0 ? (
 						listaDeProdutos.map((item) => (
 							<li key={item.id} className="bg-orange-600 p-2">
-								<h2 className="font-bold">{ajustarTituloCategoria(item.categoria)}</h2>
+								<div className="flex justify-between relative">
+									<h2 className="font-bold">{ajustarTituloCategoria(item.categoria)}</h2>
+									<button onClick={() => setVisibleExcluirCategoria(true)}>
+										<PiX />
+									</button>
+									<GerarCaixaDeMensagem
+										mensagem="Deseja realmente excluir todos os itens da categoria?"
+										funcaoSim={(e) => excluirTodosOsItensDaCategoria(e, item)}
+										funcaoNao={() => setVisibleExcluirCategoria(false)}
+										visible={visibleExcluirCategoria}
+									></GerarCaixaDeMensagem>
+								</div>
 								<ul className="flex flex-col gap-1">
 									{
 										item.listaDeProdutos?.map(produto => {
 											return (
-												<li key={produto.id} className={`grid gap-2 p-2 overflow-hidden ${produto.itemPego ? 'bg-green-700' : 'bg-zinc-600'}`} style={{ gridTemplateColumns: '1fr 50px 90px 50px' }}>
+												<li key={produto.id} className={`grid gap-1 p-1 overflow-hidden ${produto.itemPego ? 'bg-green-700' : 'bg-zinc-600'}`} style={{ gridTemplateColumns: '1fr 50px 90px 60px' }}>
 													{/* Nome do produto */}
-													<p className="w-full h-full flex justify-start items-center">{produto.produto}</p>
+													<p className="w-full h-full flex justify-start items-center leading-5 line-clamp-2 text-ellipsis">{produto.produto}</p>
 													{/* Quantidade do produto */}
 													<p className="w-full h-full flex justify-center items-center">{produto.quantidade}</p>
 
@@ -302,22 +318,14 @@ export default function Home() {
 													</div>
 
 													{/* Botões de ação */}
-													<div className="w-[50px] h-[50px] grid gap-1" style={{ gridTemplateColumns: '25px 1fr' }}>
+													<div className="w-full h-[50px] grid gap-1" style={{ gridTemplateColumns: '25px 1fr' }}>
 														<div className="grid grid-rows-2 gap-1 self-center justify-self-center w-full h-full">
 															<button className="bg-yellow-400 p-1 text-black flex justify-center items-center rounded-sm" onClick={(e) => alterarProduto(e, item, produto)}>
 																<CiEdit className="text-sm" />
 															</button>
 															<button
 																className="bg-red-500 p-1 flex justify-center items-center rounded-sm"
-																onClick={(e) =>
-																	gerarCaixaDeDialogo(
-																		e,
-																		"Tem certeza que deseja excluir?",
-																		() => deletarItemDaLista(item, produto, setListaDeProdutos),
-																		() => ocultarCaixaDePergunta(setCaixaDeDialogo),
-																		setCaixaDeDialogo
-																	)
-																}
+																onClick={() => setVisibleExcluirItemDaCategoria(true)}
 															>
 																<FaTrashAlt className="text-sm" />
 															</button>
@@ -326,6 +334,13 @@ export default function Home() {
 														<button className="self-center justify-self-center bg-green-600 w-full h-full p-1 rounded-sm flex justify-center items-center" onClick={(e) => itemPego(e, item, produto)}>
 															<FaCheckSquare className="text-xl" />
 														</button>
+
+														<GerarCaixaDeMensagem
+															mensagem="Deseja realmente excluir esse produto?"
+															funcaoSim={(e) => deletarItemDaLista(e, item, produto, setListaDeProdutos, setVisibleExcluirItemDaCategoria)}
+															funcaoNao={() => setVisibleExcluirItemDaCategoria(false)}
+															visible={visibleExcluirItemDaCategoria}
+														></GerarCaixaDeMensagem>
 													</div>
 												</li>
 											)
@@ -342,42 +357,28 @@ export default function Home() {
 						<p className="text-center uppercase font-bold bg-red-500 py-2">Sua lista ainda está vazia!</p>
 					)}
 				</ul>
-
-				{caixaDeDialogo && (
-					<div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-						<div className="bg-white p-4 rounded-lg shadow-lg">
-							<p className="mb-4">{caixaDeDialogo.dialogo}</p>
-							<div className="flex justify-between">
-								<button onClick={caixaDeDialogo.funcaoSim} className="bg-red-500 text-white px-4 py-2 rounded">
-									Sim
-								</button>
-								<button onClick={caixaDeDialogo.funcaoNao} className="bg-gray-300 px-4 py-2 rounded">
-									Cancelar
-								</button>
-							</div>
-						</div>
-					</div>
-				)}
 			</div>
 
-			{
-				listaDeProdutos.length > 0 ? (
-					<div className="w-full bg-red-500 flex flex-col mt-4 p-2">
-						<h2 className="uppercase font-bold text-center">Preço final geral de produtos</h2>
-						<p className="text-2xl uppercase font-bold text-center">
-							{
-								listaDeProdutos.map(lista => lista.listaDeProdutos.map(produto => produto.preco ? calcularValorFinalProduto(produto.quantidade, produto.preco) : 0).reduce((a, b) => a + b)).reduce((a, b) => a + b)
-							}
-						</p>
-					</div>
-				) : ('')
-			}
+			<div className="relative">
+				{
+					listaDeProdutos.length > 0 ? (
+						<div className="w-full bg-red-500 flex flex-col mt-4 p-2">
+							<h2 className="uppercase font-bold text-center">Preço final geral de produtos</h2>
+							<p className="text-2xl uppercase font-bold text-center">
+								{
+									listaDeProdutos.map(lista => lista.listaDeProdutos.map(produto => produto.preco ? calcularValorFinalProduto(produto.quantidade, produto.preco) : 0).reduce((a, b) => a + b)).reduce((a, b) => a + b)
+								}
+							</p>
+						</div>
+					) : ('')
+				}
 
-			{
-				listaDeProdutos.length > 0 ? (
-					<GerarPDF></GerarPDF>
-				) : ('')
-			}
+				{
+					listaDeProdutos.length > 0 ? (
+						<GerarPDF></GerarPDF>
+					) : ('')
+				}
+			</div>
 		</div>
 	)
 }

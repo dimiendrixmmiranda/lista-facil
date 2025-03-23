@@ -2,10 +2,13 @@ import ListaDeProdutos from "@/interfaces/ListaDeProdutos";
 import Produto from "@/interfaces/Produto";
 
 export default function deletarItemDaLista(
+    e: React.MouseEvent<HTMLButtonElement>,
     categoria: ListaDeProdutos,
     produtoDaCategoria: Produto,
-    setListaDeProdutos: React.Dispatch<React.SetStateAction<ListaDeProdutos[]>>
+    setListaDeProdutos: React.Dispatch<React.SetStateAction<ListaDeProdutos[]>>,
+    setVisible: (valor: boolean) => void
 ) {
+    e.preventDefault()
     setListaDeProdutos((prevLista) => {
         const novaLista = prevLista
             .map(cat => {
@@ -20,4 +23,5 @@ export default function deletarItemDaLista(
         localStorage.setItem("produtos", JSON.stringify(novaLista));
         return novaLista;
     });
+    setVisible(false)
 }
