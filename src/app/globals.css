@@ -7,6 +7,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --verde: #4CA98E;
+  --vermelho: #F45154;
 }
 
 @media (prefers-color-scheme: dark) {
