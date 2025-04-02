@@ -16,7 +16,7 @@ interface FormularioAlterarProdutoProps{
 
 export default function FormularioAlterarProduto({ produtoAlterado, quantidadeAlterado, categoriaAlterado, precoAlterado, itemPegoAlterado, setProdutoAlterado, setQuantidadeAlterado, setCategoriaAlterado, setPrecoAlterado, setItemPegoAlterado, salvarAlteracaoDoProduto, setVisibleFormularioAlterado, cancelarAlteracaoDoProduto}: FormularioAlterarProdutoProps) {
     return (
-        <div className="absolute top-[50%] left-[50%] w-full max-w-[300px]" style={{ transform: 'translate(-50%, -50%)' }}>
+        <div className="absolute top-[50%] left-[50%] w-full max-w-[300px] z-10" style={{ transform: 'translate(-50%, -50%)' }}>
             <form className="bg-orange-400 p-2 rounded-lg flex flex-col gap-2 text-black">
                 <fieldset className="flex flex-col">
                     <label htmlFor="nomeAlterado">Produto:</label>

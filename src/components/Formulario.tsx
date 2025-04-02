@@ -11,31 +11,33 @@ interface FormularioAlterarProdutoProps{
 export default function Formulario({produto, quantidade, categoria, setProduto, setQuantidade, setCategoria, criarProduto}:FormularioAlterarProdutoProps) {
     return (
         <div>
-            <form className="bg-orange-400 p-2 rounded-lg flex flex-col gap-2 text-black">
+            <form className="bg-[--vermelho] p-4 flex flex-col gap-2 text-black">
                 <fieldset className="flex flex-col">
-                    <label htmlFor="nome">Produto:</label>
+                    <label htmlFor="nome" className="uppercase font-bold text-white">Produto:</label>
                     <input
                         type="text"
                         name="nome"
                         id="nome"
                         className="h-[30px] p-2"
                         value={produto}
+                        autoComplete="off"
                         onChange={(e) => setProduto(e.target.value)}
                     />
                 </fieldset>
                 <fieldset className="flex flex-col">
-                    <label htmlFor="quantidade">QTDE</label>
+                    <label htmlFor="quantidade" className="uppercase font-bold text-white">QTDE</label>
                     <input
                         type="text"
                         name="quantidade"
                         id="quantidade"
                         className="h-[30px] p-2"
                         value={quantidade}
+                        autoComplete="off"
                         onChange={(e) => setQuantidade(e.target.value)}
                     />
                 </fieldset>
                 <fieldset className="flex flex-col">
-                    <label htmlFor="categoria">Categoria</label>
+                    <label htmlFor="categoria" className="uppercase font-bold text-white">Categoria</label>
                     <select
                         name="categoria"
                         id="categoria"
@@ -57,8 +59,9 @@ export default function Formulario({produto, quantidade, categoria, setProduto, 
                     </select>
                 </fieldset>
                 <button
-                    className="bg-green-500 py-1 text-xl font-bold uppercase mt-2"
+                    className="bg-black py-1 text-xl font-bold uppercase mt-2 text-white"
                     onClick={(e) => criarProduto(e)}
+                    style={{textShadow: '1px 1px 2px black'}}
                 >
                     Adicionar Produto
                 </button>

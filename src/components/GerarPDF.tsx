@@ -84,16 +84,16 @@ export default function GerarPDF() {
     }
 
     return (
-        <div className="bg-green-400">
-            <div className={`absolute top-[50%] left-[50%] bg-green-600 ${visibleCaixa ? 'block': 'hidden'}`} style={{ transform: 'translate(-50%,-50%)' }}>
-                <h2>Deseja Adicionar o nome do mercado?</h2>
-                <input className="text-black" type="text" name="nomeMercado" id="nomeMercado" value={nomeMercado} onChange={(e) => setNomeMercado(e.target.value)} />
-                <div className="grid grid-cols-2 gap-2">
-                    <button onClick={() => generatePDF(nomeMercado)}>Sim</button>
-                    <button onClick={() => generatePDF()}>Não</button>
+        <div className="bg-black p-4 flex flex-col">
+            <div className={`absolute bg-[--vermelho] top-[-50%] left-[50%] w-full max-w-[400px] p-4 rounded-md text-white ${visibleCaixa ? 'block': 'hidden'}`} style={{ transform: 'translate(-50%,-50%)', boxShadow: '0px 0px 2px 1px black' }}>
+                <h2 className="text-xl leading-7">Deseja Adicionar o nome do mercado?</h2>
+                <input className="text-black w-full h-[30px] px-2" type="text" name="nomeMercado" id="nomeMercado" value={nomeMercado} onChange={(e) => setNomeMercado(e.target.value)} />
+                <div className="grid grid-cols-2 gap-2 mt-4">
+                    <button className="uppercase font-bold text-xl bg-green-600 py-1" onClick={() => generatePDF(nomeMercado)} style={{boxShadow: '0 0 2px 1px black', textShadow: '1px 1px 2px black'}}>Sim</button>
+                    <button className="uppercase font-bold text-xl bg-red-600 py-1" onClick={() => generatePDF()} style={{boxShadow: '0 0 2px 1px black', textShadow: '1px 1px 2px black'}}>Não</button>
                 </div>
             </div>
-            <button onClick={() => setVisibleCaixa(true)}>Gerar PDF</button>
+            <button onClick={() => setVisibleCaixa(true)} className="uppercase font-bold text-2xl text-white" style={{textShadow: '1px 1px 2px black'}}>Gerar PDF</button>
         </div>
     );
 }

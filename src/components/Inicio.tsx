@@ -36,6 +36,7 @@ export default function Inicio() {
 	const [precoAlterado, setPrecoAlterado] = useState("");
 	const [itemPegoAlterado, setItemPegoAlterado] = useState(false);
 	const [produtoParaAlterar, setProdutoParaAlterar] = useState<Produto | null>(null);
+	const [categoriaParaExcluir, setCategoriaParaExcluir] = useState<string | null>(null);
 
 	useEffect(() => {
 		const produtosSalvos = localStorage.getItem("produtos");
@@ -235,7 +236,7 @@ export default function Inicio() {
 	}
 
 	return (
-		<div className="min-w-screen min-h-screen bg-blue-500 p-4">
+		<div className="min-w-screen min-h-screen bg-[--verde] p-4">
 			{/* Formulário */}
 			<Formulario
 				produto={produto}
@@ -273,12 +274,23 @@ export default function Inicio() {
 				<ul className="flex flex-col gap-6">
 					{listaDeProdutos.length > 0 ? (
 						listaDeProdutos.map((item) => (
-							<li key={item.id} className="bg-orange-600 p-2">
-								<div className="flex justify-between relative">
-									<h2 className="font-bold">{ajustarTituloCategoria(item.categoria)}</h2>
-									<button onClick={() => setVisibleExcluirCategoria(true)}>
+							<li key={item.id} className="bg-[--vermelho] text-white">
+								<div className="flex justify-between relative p-2">
+									<h2 className="font-bold text-2xl">{ajustarTituloCategoria(item.categoria)}</h2>
+									<button onClick={() => setCategoriaParaExcluir((item.id).toString())}>
 										<PiX />
 									</button>
+									{categoriaParaExcluir === (item.id).toString() && (
+										<GerarCaixaDeMensagem
+											mensagem="Deseja realmente excluir todos os itens da categoria?"
+											funcaoSim={(e) => {
+												excluirTodosOsItensDaCategoria(e, item);
+												setCategoriaParaExcluir(null);
+											}}
+											funcaoNao={() => setCategoriaParaExcluir(null)}
+											visible={categoriaParaExcluir === (item.id).toString()}
+										/>
+									)}
 									<GerarCaixaDeMensagem
 										mensagem="Deseja realmente excluir todos os itens da categoria?"
 										funcaoSim={(e) => excluirTodosOsItensDaCategoria(e, item)}
@@ -286,31 +298,31 @@ export default function Inicio() {
 										visible={visibleExcluirCategoria}
 									></GerarCaixaDeMensagem>
 								</div>
-								<ul className="flex flex-col gap-1">
+								<ul className="flex flex-col gap-1 p-2">
 									{
 										item.listaDeProdutos?.map(produto => {
 											return (
-												<li key={produto.id} className={`grid gap-1 p-1 overflow-hidden ${produto.itemPego ? 'bg-green-700' : 'bg-zinc-600'}`} style={{ gridTemplateColumns: '1fr 50px 90px 60px' }}>
+												<li key={produto.id} className={`grid gap-1 p-1 overflow-hidden ${produto.itemPego ? 'bg-green-700' : 'bg-zinc-900'}`} style={{ gridTemplateColumns: '1fr 50px 90px 60px' }}>
 													{/* Nome do produto */}
 													<p className="w-full h-full flex justify-start items-center leading-5 line-clamp-2 text-ellipsis">{produto.produto}</p>
 													{/* Quantidade do produto */}
 													<p className="w-full h-full flex justify-center items-center">{produto.quantidade}</p>
 
 													{/* Area de formulario de preço*/}
-													<form className={`bg-red-400 p-1 max-w-[90px] text-black gap-x-1 ${produto.mostrarPreco ? 'hidden' : 'grid'}`}
+													<form className={`p-1 max-w-[90px] text-white gap-x-1 ${produto.mostrarPreco ? 'hidden' : 'grid'} ${produto.itemPego ? 'bg-green-600' : 'bg-zinc-600'}`}
 														style={{ gridTemplateColumns: '1fr 20px' }}>
 														<label htmlFor="preco" className="text-sm whitespace-nowrap col-start-1 col-end-3">Inserir Preço:</label>
-														<input type="text" name="preco" id="preco" className="w-full col-start-1 col-end-2 text-sm px-1 rounded-sm" />
+														<input type="text" name="preco" id="preco" className="w-full col-start-1 col-end-2 text-sm px-1 rounded-sm text-black" />
 														<button className="col-start-2 col-end-3 w-full h-full flex justify-center items-center bg-green-700 rounded-sm" onClick={(e) => adicionarPrecoNoProduto(e, item, produto)}>
 															<IoIosCheckmarkCircle className="text-lg text-white" />
 														</button>
 													</form>
 
 													{/* Area de preço */}
-													<div className={`bg-red-400 p-1 max-w-[90px] w-full h-full self-center justify-self-center rounded-md ${produto.mostrarPreco ? 'grid' : 'hidden'}`}>
+													<div className={`p-1 max-w-[90px] w-full h-full self-center justify-self-center rounded-md ${produto.mostrarPreco ? 'grid' : 'hidden'} ${produto.itemPego ? 'bg-green-600' : 'bg-zinc-600'} `}>
 														<div className="whitespace-nowrap text-[.6em] leading-3 text-center flex justify-between">
 															<p className="flex justify-start items-center">{produto.quantidade} x {produto.preco}</p>
-															<button className="bg-yellow-500 p-[.4em] rounded-sm" onClick={(e) => alterarPrecoDoProduto(e, item, produto)}>
+															<button className="bg-yellow-500 p-[.4em] rounded-sm text-black" onClick={(e) => alterarPrecoDoProduto(e, item, produto)}>
 																<BiMessageSquareEdit />
 															</button>
 														</div>
@@ -347,14 +359,18 @@ export default function Inicio() {
 										})
 									}
 								</ul>
-								<div className="p-2 mt-2">
-									<h2 className="text-center uppercase font-bold">Preço Final da categoria</h2>
-									<p>{item.listaDeProdutos.map(item => item.preco ? calcularValorFinalProduto(item.quantidade, item.preco) : 0).reduce((a, b) => a + b)}</p>
+								<div className="p-2 mt-2 bg-[--vermelho-escuro]">
+									<h2 className="text-center uppercase font-semibold text-2xl">Preço Final da categoria</h2>
+									<p className="text-center text-4xl font-bold">
+										{
+											item.listaDeProdutos.map(item => item.preco ? calcularValorFinalProduto(item.quantidade, item.preco) : 0).reduce((a, b) => a + b)
+										}
+									</p>
 								</div>
 							</li>
 						))
 					) : (
-						<p className="text-center uppercase font-bold bg-red-500 py-2">Sua lista ainda está vazia!</p>
+						<p className="text-center uppercase font-bold bg-red-500 py-2 text-white">Sua lista ainda está vazia!</p>
 					)}
 				</ul>
 			</div>
@@ -362,9 +378,9 @@ export default function Inicio() {
 			<div className="relative">
 				{
 					listaDeProdutos.length > 0 ? (
-						<div className="w-full bg-red-500 flex flex-col mt-4 p-2">
-							<h2 className="uppercase font-bold text-center">Preço final geral de produtos</h2>
-							<p className="text-2xl uppercase font-bold text-center">
+						<div className="w-full bg-[--vermelho-escuro] flex flex-col mt-4 p-2">
+							<h2 className="uppercase font-bold text-center text-2xl text-white">Preço final geral</h2>
+							<p className="text-center text-4xl font-bold text-white">
 								{
 									listaDeProdutos.map(lista => lista.listaDeProdutos.map(produto => produto.preco ? calcularValorFinalProduto(produto.quantidade, produto.preco) : 0).reduce((a, b) => a + b)).reduce((a, b) => a + b)
 								}
