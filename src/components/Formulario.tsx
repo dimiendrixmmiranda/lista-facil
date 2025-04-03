@@ -1,4 +1,4 @@
-interface FormularioAlterarProdutoProps{
+interface FormularioAlterarProdutoProps {
     produto: string,
     setProduto: (valor: string) => void
     quantidade: string
@@ -8,10 +8,10 @@ interface FormularioAlterarProdutoProps{
     criarProduto: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-export default function Formulario({produto, quantidade, categoria, setProduto, setQuantidade, setCategoria, criarProduto}:FormularioAlterarProdutoProps) {
+export default function Formulario({ produto, quantidade, categoria, setProduto, setQuantidade, setCategoria, criarProduto }: FormularioAlterarProdutoProps) {
     return (
-        <div>
-            <form className="bg-[--vermelho] p-4 flex flex-col gap-2 text-black">
+        <div className="p-4">
+            <form className="bg-[--vermelho] p-4 flex flex-col gap-2 text-black max-w-[400px] mx-auto">
                 <fieldset className="flex flex-col">
                     <label htmlFor="nome" className="uppercase font-bold text-white">Produto:</label>
                     <input
@@ -25,7 +25,9 @@ export default function Formulario({produto, quantidade, categoria, setProduto, 
                     />
                 </fieldset>
                 <fieldset className="flex flex-col">
-                    <label htmlFor="quantidade" className="uppercase font-bold text-white">QTDE</label>
+                    <label htmlFor="quantidade" className="uppercase font-bold text-white">
+                        QTDE
+                    </label>
                     <input
                         type="text"
                         name="quantidade"
@@ -33,9 +35,25 @@ export default function Formulario({produto, quantidade, categoria, setProduto, 
                         className="h-[30px] p-2"
                         value={quantidade}
                         autoComplete="off"
-                        onChange={(e) => setQuantidade(e.target.value)}
+                        onChange={(e) => {
+                            const valor = e.target.value.trim();
+
+                            // Permitir apenas números seguidos opcionalmente de g, kg ou un
+                            const regex = /^(\d+)(g|kg|un)?$/;
+
+                            if (regex.test(valor) || valor === "") {
+                                setQuantidade(valor);
+                            }
+                        }}
+                        onBlur={() => {
+                            // Se o usuário sair do campo e não tiver unidade, adicionar "un"
+                            if (/^\d+$/.test(quantidade)) {
+                                setQuantidade(quantidade + "un");
+                            }
+                        }}
                     />
                 </fieldset>
+
                 <fieldset className="flex flex-col">
                     <label htmlFor="categoria" className="uppercase font-bold text-white">Categoria</label>
                     <select
@@ -61,7 +79,7 @@ export default function Formulario({produto, quantidade, categoria, setProduto, 
                 <button
                     className="bg-black py-1 text-xl font-bold uppercase mt-2 text-white"
                     onClick={(e) => criarProduto(e)}
-                    style={{textShadow: '1px 1px 2px black'}}
+                    style={{ textShadow: '1px 1px 2px black' }}
                 >
                     Adicionar Produto
                 </button>

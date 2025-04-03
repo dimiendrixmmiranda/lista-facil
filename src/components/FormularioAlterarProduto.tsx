@@ -1,4 +1,4 @@
-interface FormularioAlterarProdutoProps{
+interface FormularioAlterarProdutoProps {
     produtoAlterado: string,
     setProdutoAlterado: (valor: string) => void
     quantidadeAlterado: string
@@ -14,12 +14,12 @@ interface FormularioAlterarProdutoProps{
     cancelarAlteracaoDoProduto: (event: React.MouseEvent<HTMLButtonElement>, setVisibleFormularioAlterado: (valor: boolean) => void) => void
 }
 
-export default function FormularioAlterarProduto({ produtoAlterado, quantidadeAlterado, categoriaAlterado, precoAlterado, itemPegoAlterado, setProdutoAlterado, setQuantidadeAlterado, setCategoriaAlterado, setPrecoAlterado, setItemPegoAlterado, salvarAlteracaoDoProduto, setVisibleFormularioAlterado, cancelarAlteracaoDoProduto}: FormularioAlterarProdutoProps) {
+export default function FormularioAlterarProduto({ produtoAlterado, quantidadeAlterado, categoriaAlterado, precoAlterado, itemPegoAlterado, setProdutoAlterado, setQuantidadeAlterado, setCategoriaAlterado, setPrecoAlterado, setItemPegoAlterado, salvarAlteracaoDoProduto, setVisibleFormularioAlterado, cancelarAlteracaoDoProduto }: FormularioAlterarProdutoProps) {
     return (
         <div className="absolute top-[50%] left-[50%] w-full max-w-[300px] z-10" style={{ transform: 'translate(-50%, -50%)' }}>
-            <form className="bg-orange-400 p-2 rounded-lg flex flex-col gap-2 text-black">
+            <form className="bg-[--vermelho] p-4 flex flex-col gap-2 text-black max-w-[400px] mx-auto" style={{boxShadow: '0 0 2px 1px black'}}>
                 <fieldset className="flex flex-col">
-                    <label htmlFor="nomeAlterado">Produto:</label>
+                    <label className="text-white uppercase font-bold" htmlFor="nomeAlterado">Produto:</label>
                     <input
                         type="text"
                         name="nomeAlterado"
@@ -30,7 +30,7 @@ export default function FormularioAlterarProduto({ produtoAlterado, quantidadeAl
                     />
                 </fieldset>
                 <fieldset className="flex flex-col">
-                    <label htmlFor="quantidadeAlterado">QTDE</label>
+                    <label className="text-white uppercase font-bold" htmlFor="quantidadeAlterado">QTDE</label>
                     <input
                         type="text"
                         name="quantidadeAlterado"
@@ -41,7 +41,7 @@ export default function FormularioAlterarProduto({ produtoAlterado, quantidadeAl
                     />
                 </fieldset>
                 <fieldset className="flex flex-col">
-                    <label htmlFor="categoriaAlterado">Categoria</label>
+                    <label className="text-white uppercase font-bold" htmlFor="categoriaAlterado">Categoria</label>
                     <select
                         name="categoriaAlterado"
                         id="categoriaAlterado"
@@ -64,24 +64,24 @@ export default function FormularioAlterarProduto({ produtoAlterado, quantidadeAl
                 </fieldset>
 
                 <fieldset className="flex flex-col">
-                    <label htmlFor="precoAlterado">Preco</label>
-                    <input type="text" name="precoAlterado" id="precoAlterado" value={precoAlterado}
+                    <label className="text-white uppercase font-bold" htmlFor="precoAlterado">Preco</label>
+                    <input className="px-2" type="text" name="precoAlterado" id="precoAlterado" value={precoAlterado}
                         onChange={(e) => setPrecoAlterado(e.target.value)} />
                 </fieldset>
 
                 <fieldset className="flex">
-                    <label htmlFor="itemPegoAlterado">Item ja foi pego?</label>
+                    <label className="text-white uppercase font-bold" htmlFor="itemPegoAlterado">Item ja foi pego?</label>
                     <input type="checkbox" name="itemPegoAlterado" id="itemPegoAlterado" checked={itemPegoAlterado} onChange={(e) => setItemPegoAlterado(e.target.checked)} />
                 </fieldset>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2 text-white">
                     <button
-                        className="bg-green-500 py-1 text-xl font-bold uppercase mt-2"
+                        className="bg-green-600 py-1 text-xl font-bold uppercase mt-2"
                         onClick={(e) => salvarAlteracaoDoProduto(e)}
                     >
                         Alterar
                     </button>
                     <button
-                        className="bg-green-500 py-1 text-xl font-bold uppercase mt-2"
+                        className="bg-red-600 py-1 text-xl font-bold uppercase mt-2"
                         onClick={(e) => cancelarAlteracaoDoProduto(e, setVisibleFormularioAlterado)}
                     >
                         Cancelar

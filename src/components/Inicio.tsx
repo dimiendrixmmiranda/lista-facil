@@ -12,10 +12,12 @@ import cancelarAlteracaoDoProduto from "@/utils/cancelarAlteracaoDoProduto";
 import deletarItemDaLista from "@/utils/deletarItemDaLista";
 import gerarId from "@/utils/gerarId";
 import limparVarios from "@/utils/limparFormularios";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import { CiEdit } from "react-icons/ci";
 import { FaCheckSquare, FaTrashAlt } from "react-icons/fa";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { PiX } from "react-icons/pi";
 
@@ -71,6 +73,8 @@ export default function Inicio() {
 			itemPego: false,
 			mostrarPreco: false,
 		}
+
+		console.log(novoProduto)
 
 		// Verifica se a categoria já existe
 		const novaLista = [...listaDeProdutos];
@@ -236,7 +240,18 @@ export default function Inicio() {
 	}
 
 	return (
-		<div className="min-w-screen min-h-screen bg-[--verde] p-4">
+		<div className="min-w-screen min-h-screen bg-[--verde]">
+			{/* Cabeçalho */}
+			<div className="bg-black mb-8 p-4 flex items-center text-white">
+				<div className="flex items-center flex-1">
+					<Image src={'/logo-lista-facil.png'} alt="logo" width={50} height={50}></Image>
+					<h1 className="uppercase font-bold text-3xl mt-1">Lista Fácil</h1>
+				</div>
+				<button className="text-4xl ml-full">
+					<GiHamburgerMenu />
+				</button>
+			</div>
+
 			{/* Formulário */}
 			<Formulario
 				produto={produto}
@@ -270,11 +285,11 @@ export default function Inicio() {
 			}
 
 			{/* Lista de produtos */}
-			<div className="mt-8">
-				<ul className="flex flex-col gap-6">
+			<div className="p-4 mt-8 max-w-[400px] mx-auto md:max-w-fit">
+				<ul className="flex flex-col gap-6 md:grid md:grid-cols-2">
 					{listaDeProdutos.length > 0 ? (
 						listaDeProdutos.map((item) => (
-							<li key={item.id} className="bg-[--vermelho] text-white">
+							<li key={item.id} className="bg-[--vermelho] text-white h-fit">
 								<div className="flex justify-between relative p-2">
 									<h2 className="font-bold text-2xl">{ajustarTituloCategoria(item.categoria)}</h2>
 									<button onClick={() => setCategoriaParaExcluir((item.id).toString())}>
@@ -319,14 +334,15 @@ export default function Inicio() {
 													</form>
 
 													{/* Area de preço */}
-													<div className={`p-1 max-w-[90px] w-full h-full self-center justify-self-center rounded-md ${produto.mostrarPreco ? 'grid' : 'hidden'} ${produto.itemPego ? 'bg-green-600' : 'bg-zinc-600'} `}>
-														<div className="whitespace-nowrap text-[.6em] leading-3 text-center flex justify-between">
-															<p className="flex justify-start items-center">{produto.quantidade} x {produto.preco}</p>
-															<button className="bg-yellow-500 p-[.4em] rounded-sm text-black" onClick={(e) => alterarPrecoDoProduto(e, item, produto)}>
-																<BiMessageSquareEdit />
-															</button>
+													<div className={`relative p-1 max-w-[90px] w-full h-full self-center justify-self-center rounded-md ${produto.mostrarPreco ? 'grid' : 'hidden'} ${produto.itemPego ? 'bg-green-600' : 'bg-zinc-600'} `}>
+														<div className="whitespace-nowrap text-[.6em] leading-3 text-center flex justify-center">
+															<p className="flex justify-start items-center">{produto.quantidade} x {`R$${produto.preco}`}</p>
 														</div>
-														<p className="text-center uppercase font-bold">{produto.preco != undefined ? calcularValorFinalProduto(produto.quantidade, produto.preco) : ''}</p>
+														<p className="text-center uppercase font-bold">{produto.preco != undefined ? `R$${calcularValorFinalProduto(produto.quantidade, produto.preco).toFixed(2)}` : ''}</p>
+														<button className="bg-yellow-500 rounded-sm text-black flex items-center justify-center w-full text-[.5em]" onClick={(e) => alterarPrecoDoProduto(e, item, produto)}>
+															<BiMessageSquareEdit />
+															<p>Alterar</p>
+														</button>
 													</div>
 
 													{/* Botões de ação */}
@@ -360,10 +376,10 @@ export default function Inicio() {
 									}
 								</ul>
 								<div className="p-2 mt-2 bg-[--vermelho-escuro]">
-									<h2 className="text-center uppercase font-semibold text-2xl">Preço Final da categoria</h2>
-									<p className="text-center text-4xl font-bold">
+									<p className="text-center text-2xl font-bold">
+										Preço Final:
 										{
-											item.listaDeProdutos.map(item => item.preco ? calcularValorFinalProduto(item.quantidade, item.preco) : 0).reduce((a, b) => a + b)
+											`R$${item.listaDeProdutos.map(item => item.preco ? calcularValorFinalProduto(item.quantidade, item.preco) : 0).reduce((a, b) => a + b).toFixed(2)}`
 										}
 									</p>
 								</div>
@@ -375,14 +391,14 @@ export default function Inicio() {
 				</ul>
 			</div>
 
-			<div className="relative">
+			<div className="relative max-w-[400px] mx-auto p-4">
 				{
 					listaDeProdutos.length > 0 ? (
 						<div className="w-full bg-[--vermelho-escuro] flex flex-col mt-4 p-2">
 							<h2 className="uppercase font-bold text-center text-2xl text-white">Preço final geral</h2>
 							<p className="text-center text-4xl font-bold text-white">
 								{
-									listaDeProdutos.map(lista => lista.listaDeProdutos.map(produto => produto.preco ? calcularValorFinalProduto(produto.quantidade, produto.preco) : 0).reduce((a, b) => a + b)).reduce((a, b) => a + b)
+									`R$${listaDeProdutos.map(lista => lista.listaDeProdutos.map(produto => produto.preco ? calcularValorFinalProduto(produto.quantidade, produto.preco) : 0).reduce((a, b) => a + b)).reduce((a, b) => a + b).toFixed(2)}`
 								}
 							</p>
 						</div>
