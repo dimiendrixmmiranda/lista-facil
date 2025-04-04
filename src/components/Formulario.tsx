@@ -1,3 +1,6 @@
+import handleChangeQuantidade from "@/hooks/handleChangeQuantidade"
+import { useState } from "react"
+
 interface FormularioAlterarProdutoProps {
     produto: string,
     setProduto: (valor: string) => void
@@ -5,13 +8,20 @@ interface FormularioAlterarProdutoProps {
     setQuantidade: (valor: string) => void
     categoria: string
     setCategoria: (valor: string) => void
-    criarProduto: (e: React.MouseEvent<HTMLButtonElement>) => void
+    criarProduto: (
+        e: React.MouseEvent<HTMLButtonElement>,
+        produto: string,
+        quantidade: string,
+        categoria: string
+    ) => void
 }
 
 export default function Formulario({ produto, quantidade, categoria, setProduto, setQuantidade, setCategoria, criarProduto }: FormularioAlterarProdutoProps) {
+    const [erroQuantidade, setErroQuantidade] = useState("")
+
     return (
         <div className="p-4">
-            <form className="bg-[--vermelho] p-4 flex flex-col gap-2 text-black max-w-[400px] mx-auto">
+            <form className="bg-blue-500 p-4 flex flex-col gap-2 text-black max-w-[400px] mx-auto">
                 <fieldset className="flex flex-col">
                     <label htmlFor="nome" className="uppercase font-bold text-white">Produto:</label>
                     <input
@@ -32,26 +42,12 @@ export default function Formulario({ produto, quantidade, categoria, setProduto,
                         type="text"
                         name="quantidade"
                         id="quantidade"
-                        className="h-[30px] p-2"
+                        className={`h-[30px] p-2 ${erroQuantidade ? 'border-red-500' : ''}`}
                         value={quantidade}
                         autoComplete="off"
-                        onChange={(e) => {
-                            const valor = e.target.value.trim();
-
-                            // Permitir apenas números seguidos opcionalmente de g, kg ou un
-                            const regex = /^(\d+)(g|kg|un)?$/;
-
-                            if (regex.test(valor) || valor === "") {
-                                setQuantidade(valor);
-                            }
-                        }}
-                        onBlur={() => {
-                            // Se o usuário sair do campo e não tiver unidade, adicionar "un"
-                            if (/^\d+$/.test(quantidade)) {
-                                setQuantidade(quantidade + "un");
-                            }
-                        }}
+                        onChange={(e) => handleChangeQuantidade(e, setQuantidade, setErroQuantidade)} // Use a nova função de manipulação
                     />
+                    {erroQuantidade && <p className="text-red-500 text-sm">{erroQuantidade}</p>}
                 </fieldset>
 
                 <fieldset className="flex flex-col">
@@ -78,7 +74,7 @@ export default function Formulario({ produto, quantidade, categoria, setProduto,
                 </fieldset>
                 <button
                     className="bg-black py-1 text-xl font-bold uppercase mt-2 text-white"
-                    onClick={(e) => criarProduto(e)}
+                    onClick={(e) => criarProduto(e, produto, quantidade, categoria)}
                     style={{ textShadow: '1px 1px 2px black' }}
                 >
                     Adicionar Produto

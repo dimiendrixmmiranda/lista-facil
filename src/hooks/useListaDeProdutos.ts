@@ -1,18 +1,48 @@
-import { useState, useEffect } from "react";
-import ListaDeProdutos from "@/interfaces/ListaDeProdutos";
+import { useState, useEffect } from 'react';
+import Produto from '@/interfaces/Produto'; // Ajuste o caminho se necessário
 
-export function useListaDeProdutos() {
-    const [listaDeProdutos, setListaDeProdutos] = useState<ListaDeProdutos[]>(() => {
-        if (typeof window !== "undefined") {
-            const storedData = localStorage.getItem("produtos");
-            return storedData ? JSON.parse(storedData) : [];
-        }
-        return [];
-    });
-
+function useListaDeProdutos(localStorageKey = 'produtos'): [Produto[], React.Dispatch<React.SetStateAction<Produto[]>>] {
+    const [listaDeProdutos, setListaDeProdutos] = useState<Produto[]>([])
+    
     useEffect(() => {
-        localStorage.setItem("produtos", JSON.stringify(listaDeProdutos));
-    }, [listaDeProdutos]);
+        const carregarProdutosDoLocalStorage = () => {
+            const produtosSalvos = localStorage.getItem(localStorageKey)
+            if (produtosSalvos) {
+                try {
+                    const lista = JSON.parse(produtosSalvos)
+                    if (Array.isArray(lista)) {
+                        setListaDeProdutos(lista)
+                    } else {
+                        setListaDeProdutos([])
+                    }
+                } catch (error) {
+                    console.error(`Erro ao carregar "${localStorageKey}" do localStorage:`, error)
+                    setListaDeProdutos([])
+                }
+            } else {
+                setListaDeProdutos([])
+            }
+        };
 
-    return { listaDeProdutos, setListaDeProdutos };
+        // Carregar os produtos na montagem do componente
+        carregarProdutosDoLocalStorage()
+
+        // Adicionar um listener para o evento 'storage'
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.key === localStorageKey) {
+                carregarProdutosDoLocalStorage()
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        // Remover o listener quando o componente for desmontado
+        return () => {
+            window.removeEventListener('storage', handleStorageChange)
+        }
+    }, [localStorageKey, setListaDeProdutos])
+
+    return [listaDeProdutos, setListaDeProdutos]
 }
+
+export default useListaDeProdutos;

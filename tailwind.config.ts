@@ -20,6 +20,10 @@ export default {
         '2xl': '1440px',
       }
     },
+    fontFamily: {
+      primaria: ['var(--font-primaria)', 'sans-serif'],
+      secundaria: ['var(--font-secundaria)', 'sans-serif'],
+    },
   },
   plugins: [],
 } satisfies Config;

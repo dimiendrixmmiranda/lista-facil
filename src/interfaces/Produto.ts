@@ -3,7 +3,4 @@ export default interface Produto {
 	produto: string;
 	quantidade: string;
 	categoria: string;
-	itemPego: boolean
-	preco?: string;
-	mostrarPreco?: boolean; // Novo estado para cada produto
 }

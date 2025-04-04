@@ -81,8 +81,8 @@ export default function Page() {
 							</div>
 							<button className="w-full bg-black uppercase font-bold py-1 rounded-md mt-2" onClick={submeter}>Entrar</button>
 
-							<div className="w-full h-full text-black flex flex-col justify-center items-center" >
-								<button className="bg-[--vermelho] uppercase font-bold px-4 py-1 rounded-md text-white" onClick={() => setModo('cadastro')}>Ainda não se cadastrou? Cadastre-se Agora!</button>
+							<div className="w-full h-full bg-[--vermelho-escuro] rounded-md text-black flex flex-col justify-center items-center" >
+								<button className="uppercase font-bold px-4 py-1 text-white w-full h-full" onClick={() => setModo('cadastro')}>Ainda não se cadastrou? Cadastre-se Agora!</button>
 							</div>
 						</div>
 					) : (
@@ -110,8 +110,8 @@ export default function Page() {
 							</button>
 							<button className="w-full bg-black uppercase font-bold py-1 rounded-md" onClick={submeter}>Registrar</button>
 
-							<div className="w-full h-full text-black flex flex-col justify-center items-center" >
-								<button className="bg-[--vermelho] uppercase font-bold px-4 py-1 rounded-md text-white" onClick={() => setModo('login')}>Já é cadastrado? Faça o login</button>
+							<div className="bg-[--vermelho-escuro] rounded-md text-black flex flex-col justify-center items-center" >
+								<button className="uppercase font-bold px-4 py-1 text-white w-full h-full " onClick={() => setModo('login')}>Já é cadastrado? Faça o login</button>
 							</div>
 						</div>
 					)
