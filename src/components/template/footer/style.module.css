@@ -1,0 +1,15 @@
+.rodape{
+    background-color: black;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+@media screen and (min-width: 1280px) {
+    .rodape{
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1em;
+    }
+}

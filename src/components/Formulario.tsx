@@ -21,14 +21,14 @@ export default function Formulario({ produto, quantidade, categoria, setProduto,
 
     return (
         <div className="p-4">
-            <form className="bg-blue-500 p-4 flex flex-col gap-2 text-black max-w-[400px] mx-auto">
+            <form className="bg-[--vermelho-escuro] p-4 flex flex-col gap-2 text-black max-w-[400px] mx-auto">
                 <fieldset className="flex flex-col">
                     <label htmlFor="nome" className="uppercase font-bold text-white">Produto:</label>
                     <input
                         type="text"
                         name="nome"
                         id="nome"
-                        className="h-[30px] p-2"
+                        className="h-[30px] p-2 rounded-md"
                         value={produto}
                         autoComplete="off"
                         onChange={(e) => setProduto(e.target.value)}
@@ -42,12 +42,12 @@ export default function Formulario({ produto, quantidade, categoria, setProduto,
                         type="text"
                         name="quantidade"
                         id="quantidade"
-                        className={`h-[30px] p-2 ${erroQuantidade ? 'border-red-500' : ''}`}
+                        className={`h-[30px] p-2 rounded-md ${erroQuantidade ? 'border-red-500' : ''}`}
                         value={quantidade}
                         autoComplete="off"
                         onChange={(e) => handleChangeQuantidade(e, setQuantidade, setErroQuantidade)} // Use a nova função de manipulação
                     />
-                    {erroQuantidade && <p className="text-red-500 text-sm">{erroQuantidade}</p>}
+                    {erroQuantidade && <p className="text-white text-sm mt-2 leading-4">{erroQuantidade}</p>}
                 </fieldset>
 
                 <fieldset className="flex flex-col">
@@ -57,7 +57,7 @@ export default function Formulario({ produto, quantidade, categoria, setProduto,
                         id="categoria"
                         value={categoria}
                         onChange={(e) => setCategoria(e.target.value)}
-                        className="h-[30px] px-2"
+                        className="h-[30px] px-2 rounded-md"
                     >
                         <option value="">Selecione</option>
                         <option value="geral">Geral</option>
