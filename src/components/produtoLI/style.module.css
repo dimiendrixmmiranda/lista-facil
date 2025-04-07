@@ -4,4 +4,5 @@
     grid-template-columns: 1fr 50px 80px 60px;
     color: white;
     border-bottom: solid 1px white;
+    gap: .2em;
 }

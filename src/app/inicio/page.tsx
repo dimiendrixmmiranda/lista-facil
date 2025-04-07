@@ -28,7 +28,8 @@ export default function Page() {
             produto,
             quantidade,
             categoria,
-            concluido: false
+            concluido: false,
+            preco: 0
         };
 
         // **Corrigido:** Use setListaDeProdutos para atualizar o estado

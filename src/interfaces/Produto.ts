@@ -4,4 +4,5 @@ export default interface Produto {
 	quantidade: string;
 	categoria: string;
 	concluido: boolean
+	preco: number
 }
