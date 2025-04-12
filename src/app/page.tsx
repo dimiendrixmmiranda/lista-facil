@@ -109,7 +109,6 @@ export default function Page() {
 								Entrar com o Google <FaGoogle />
 							</button>
 							<button className="w-full bg-black uppercase font-bold py-1 rounded-md" onClick={submeter}>Registrar</button>
-
 							<div className="bg-[--vermelho-escuro] rounded-md text-black flex flex-col justify-center items-center" >
 								<button className="uppercase font-bold px-4 py-1 text-white w-full h-full " onClick={() => setModo('login')}>Já é cadastrado? Faça o login</button>
 							</div>
